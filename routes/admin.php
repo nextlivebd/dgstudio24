@@ -29,6 +29,19 @@ Route::middleware('admin')->group(function () {
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');
     
-    // Contacts
+    // Contacts (Frontend submissions)
     Route::get('/contacts', [\App\Http\Controllers\Admin\ContactController::class, 'index'])->name('contacts.index');
+
+    // Office Contact Informations
+    Route::resource('contact-informations', \App\Http\Controllers\Admin\ContactInformationController::class)->except(['show']);
+
+    // Categories
+    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class)->except(['show']);
+
+    // Blogs
+    Route::post('blogs/upload-image', [\App\Http\Controllers\Admin\BlogController::class, 'uploadImage'])->name('blogs.uploadImage');
+    Route::resource('blogs', \App\Http\Controllers\Admin\BlogController::class)->except(['show']);
+
+    // Users
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->except(['show']);
 });

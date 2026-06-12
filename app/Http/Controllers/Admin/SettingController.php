@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Setting;
-use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
 {
@@ -25,7 +24,22 @@ class SettingController extends Controller
             'og_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
-        $settings = $request->except(['_token', 'logo', 'favicon', 'og_image']);
+        // Process Dynamic JSON Data
+        $social_links = $this->formatJsonData($request->social_icon, $request->social_text);
+        $main_phones = $this->formatJsonData($request->phone_icon, $request->phone_text);
+        $main_emails = $this->formatJsonData($request->email_icon, $request->email_text);
+
+        Setting::updateOrCreate(['key' => 'social_links'], ['value' => json_encode($social_links)]);
+        Setting::updateOrCreate(['key' => 'main_phones'], ['value' => json_encode($main_phones)]);
+        Setting::updateOrCreate(['key' => 'main_emails'], ['value' => json_encode($main_emails)]);
+
+        // Process other simple settings
+        $settings = $request->except([
+            '_token', 'logo', 'favicon', 'og_image', 
+            'social_icon', 'social_text', 
+            'phone_icon', 'phone_text', 
+            'email_icon', 'email_text'
+        ]);
 
         foreach ($settings as $key => $value) {
             Setting::updateOrCreate(['key' => $key], ['value' => $value]);
@@ -37,6 +51,22 @@ class SettingController extends Controller
         $this->handleUpload($request, 'og_image');
 
         return redirect()->back()->with('success', 'Site settings updated successfully!');
+    }
+
+    private function formatJsonData($icons, $texts)
+    {
+        $data = [];
+        if (is_array($texts)) {
+            foreach ($texts as $key => $text) {
+                if (!empty($text)) {
+                    $data[] = [
+                        'icon' => $icons[$key] ?? '',
+                        'text' => $text
+                    ];
+                }
+            }
+        }
+        return empty($data) ? null : $data;
     }
 
     private function handleUpload(Request $request, $key)

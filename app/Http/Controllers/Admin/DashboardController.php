@@ -3,16 +3,26 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Contact;
+use App\Models\Page;
+use App\Models\Blog;
+use App\Models\Visitor;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $totalPages = \App\Models\Page::count();
-        $totalContacts = \App\Models\Contact::count();
-        $recentContacts = \App\Models\Contact::orderBy('created_at', 'desc')->take(5)->get();
+        $totalPages = Page::count();
+        $totalContacts = Contact::count();
+        $totalBlogs = Blog::count();
+        $recentContacts = Contact::latest()->take(5)->get();
         
-        return view('admin.dashboard', compact('totalPages', 'totalContacts', 'recentContacts'));
+        $dailyTraffic = Visitor::whereDate('visited_date', now()->format('Y-m-d'))->count();
+        $totalTraffic = Visitor::count();
+
+        return view('admin.dashboard', compact(
+            'totalPages', 'totalContacts', 'totalBlogs', 
+            'recentContacts', 'dailyTraffic', 'totalTraffic'
+        ));
     }
 }
