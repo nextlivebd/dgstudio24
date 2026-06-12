@@ -44,4 +44,7 @@ Route::middleware('admin')->group(function () {
 
     // Users
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->except(['show']);
+
+    // Sliders
+    Route::resource('sliders', \App\Http\Controllers\Admin\SliderController::class)->except(['show']);
 });

@@ -82,6 +82,10 @@
             <i class="fas fa-blog"></i> Blogs
         </a>
 
+        <a href="{{ route('admin.sliders.index') }}" class="{{ request()->routeIs('admin.sliders.*') ? 'active' : '' }}">
+            <i class="fas fa-images"></i> Sliders
+        </a>
+
         <a href="{{ route('admin.categories.index') }}" class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
             <i class="fas fa-tags"></i> Categories
         </a>

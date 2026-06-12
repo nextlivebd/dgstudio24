@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 
 class FrontendController extends Controller
 {
-    public function index() { return view('frontend.pages.home'); }
+    public function index() { 
+        $sliders = \App\Models\Slider::where('status', true)->orderBy('order')->get();
+        return view('frontend.pages.home', compact('sliders')); 
+    }
     
     // Magic method to catch all other static page methods
     public function __call($method, $parameters)
