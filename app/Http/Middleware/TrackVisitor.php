@@ -16,14 +16,18 @@ class TrackVisitor
     public function handle(Request $request, Closure $next): Response
     {
         // Only track visitors on non-admin and non-api routes
-        if (!$request->is('admin/*') && !$request->is('api/*') && !$request->ajax()) {
-            $ip = $request->ip();
-            $date = now()->format('Y-m-d');
+        if (!$request->is('admin/*') && !$request->is('api/*') && !$request->is('server-setup-run') && !$request->ajax()) {
+            try {
+                $ip = $request->ip();
+                $date = now()->format('Y-m-d');
 
-            \App\Models\Visitor::firstOrCreate([
-                'ip_address' => $ip,
-                'visited_date' => $date
-            ]);
+                \App\Models\Visitor::firstOrCreate([
+                    'ip_address' => $ip,
+                    'visited_date' => $date
+                ]);
+            } catch (\Exception $e) {
+                // Ignore DB errors during setup
+            }
         }
 
         return $next($request);
