@@ -4,11 +4,32 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="keywords" content="Global Graphic Giant, IT Solution, Web Development, Image Production" />
-    <meta name="description" content="{{ get_setting('meta_description', 'Global Graphic Giant – A Complete IT Solution') }}" />
-    <meta property="og:image" content="{{ get_setting('og_image') ? asset(get_setting('og_image')) : '' }}" />
+    <meta name="keywords" content="@yield('meta_keywords', 'Global Graphic Giant, IT Solution, Web Development, Image Production')" />
+    <meta name="description" content="@yield('meta_description', get_setting('meta_description', 'Global Graphic Giant – A Complete IT Solution'))" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="@yield('og_type', 'website')" />
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta property="og:title" content="@yield('meta_title', get_setting('meta_title', 'Global Graphic Giant – A Complete IT Solution'))" />
+    <meta property="og:description" content="@yield('meta_description', get_setting('meta_description', 'Global Graphic Giant – A Complete IT Solution'))" />
+    <meta property="og:image" content="@yield('og_image', get_setting('og_image') ? asset(get_setting('og_image')) : '')" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="{{ url()->current() }}" />
+    <meta name="twitter:title" content="@yield('meta_title', get_setting('meta_title', 'Global Graphic Giant – A Complete IT Solution'))" />
+    <meta name="twitter:description" content="@yield('meta_description', get_setting('meta_description', 'Global Graphic Giant – A Complete IT Solution'))" />
+    <meta name="twitter:image" content="@yield('og_image', get_setting('og_image') ? asset(get_setting('og_image')) : '')" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <title>{{ get_setting('meta_title', 'Global Graphic Giant – A Complete IT Solution') }}</title>
+    
+    @hasSection('canonical')
+        <link rel="canonical" href="@yield('canonical')" />
+    @else
+        <link rel="canonical" href="{{ url()->current() }}" />
+    @endif
+
+    <title>@yield('meta_title', get_setting('meta_title', 'Global Graphic Giant – A Complete IT Solution'))</title>
 
     <!-- favicon icon -->
     <link rel="shortcut icon" href="{{ get_setting('favicon') ? asset(get_setting('favicon')) : asset('frontend/images/favicon.jpg') }}" />
@@ -67,24 +88,62 @@
                     <div class="ttm-topbar-wrapper clearfix">
                         <div class="container">
                             <div class="ttm-topbar-content">
+                                @php
+                                    $mainPhones = json_decode(get_setting('main_phones', '[]'), true);
+                                    $mainEmails = json_decode(get_setting('main_emails', '[]'), true);
+                                    $socialLinks = json_decode(get_setting('social_links', '[]'), true);
+                                    
+                                    $topPhone = (is_array($mainPhones) && count($mainPhones) > 0) ? $mainPhones[0]['text'] : '+1 (416) 686-3111';
+                                    $topEmail = (is_array($mainEmails) && count($mainEmails) > 0) ? $mainEmails[0]['text'] : 'info@shehala.com';
+                                    
+                                    if (!function_exists('mapIcon')) {
+                                        function mapIcon($icon) {
+                                            $map = [
+                                                'fab fa-facebook-f' => 'fa fa-facebook',
+                                                'fab fa-linkedin-in' => 'fa fa-linkedin',
+                                                'fab fa-pinterest-p' => 'fa fa-pinterest',
+                                                'fab fa-telegram-plane' => 'fa fa-telegram',
+                                                'fab fa-tiktok' => 'fa fa-music',
+                                                'fas fa-phone-alt' => 'fa fa-phone',
+                                                'fas fa-map-marker-alt' => 'fa fa-map-marker',
+                                            ];
+                                            return $map[$icon] ?? str_replace(['fas ', 'fab ', 'far '], 'fa ', $icon);
+                                        }
+                                    }
+                                    
+                                    if (!function_exists('getSocialName')) {
+                                        function getSocialName($icon) {
+                                            if (strpos($icon, 'facebook') !== false) return 'Facebook';
+                                            if (strpos($icon, 'twitter') !== false) return 'Twitter';
+                                            if (strpos($icon, 'linkedin') !== false) return 'LinkedIn';
+                                            if (strpos($icon, 'youtube') !== false) return 'YouTube';
+                                            if (strpos($icon, 'instagram') !== false) return 'Instagram';
+                                            if (strpos($icon, 'whatsapp') !== false) return 'WhatsApp';
+                                            if (strpos($icon, 'pinterest') !== false) return 'Pinterest';
+                                            return 'Social';
+                                        }
+                                    }
+                                @endphp
                                 <ul class="top-contact text-left">
-                                    <li><i class="fa fa-phone"></i>+8801712528945, +8801612528945</li>
-                                    <li><i class="fa fa-envelope-o"></i><a href="mailto:contact@ggg24.design">contact@ggg24.design </a></li>
+                                    <li><i class="fa fa-phone"></i>{{ $topPhone }} </li>
+                                    <li><i class="fa fa-envelope-o"></i><a href="mailto:{{ $topEmail }}">{{ $topEmail }}</a></li>
                                 </ul>
                                 <div class="topbar-right text-right">
                                     <ul class="top-contact">
-                                        <li><i class="fa fa-clock-o"></i>Office Hour: 24/6</li>
+                                        <li><i class="fa fa-clock-o"></i>Office Hour: {{ get_setting('office_hours', '24/6') }}</li>
                                     </ul>
                                     <div class="ttm-social-links-wrapper list-inline">
                                         <ul class="social-icons">
-                                            <li><a href="https://www.facebook.com/Shehala.IT.Limited" class=" tooltip-bottom" data-tooltip="Facebook" target="_blank"><i class="fa fa-facebook"></i></a>
-                                            </li>
-                                            <li><a href="https://twitter.com/ShehalaItLtd" class=" tooltip-bottom" data-tooltip="Twitter" target="_blank"><i class="fa fa-twitter"></i></a>
-                                            </li>
-                                            <li><a href="https://www.youtube.com/user/ShehalaIt" class=" tooltip-bottom" data-tooltip="Youtube" target="_blank"><i class="fa fa-youtube"></i></a>
-                                            </li>
-                                            <li><a href="https://bd.linkedin.com/in/shehala" class=" tooltip-bottom" data-tooltip="Linkedin" target="_blank"><i class="fa fa-linkedin"></i></a>
-                                            </li>
+                                            @if(is_array($socialLinks) && count($socialLinks) > 0)
+                                                @foreach($socialLinks as $social)
+                                                <li><a href="{{ $social['text'] }}" class=" tooltip-bottom" data-tooltip="{{ $social['name'] ?? getSocialName($social['icon']) }}"><i class="{{ mapIcon($social['icon']) }}"></i></a></li>
+                                                @endforeach
+                                            @else
+                                                <li><a href="#" class=" tooltip-bottom"><i class="fa fa-facebook"></i></a></li>
+                                                <li><a href="#" class=" tooltip-bottom"><i class="fa fa-twitter"></i></a></li>
+                                                <li><a href="#" class=" tooltip-bottom"><i class="fa fa-youtube"></i></a></li>
+                                                <li><a href="#" class=" tooltip-bottom"><i class="fa fa-linkedin"></i></a></li>
+                                            @endif
                                         </ul>
                                     </div>
                                     <div class="header-btn">
@@ -125,90 +184,45 @@
                                     </div>
                                     <nav id="menu" class="menu">
                                         <ul class="dropdown">
-                                            @php
-                                                $services = ['web-application-development', 'digital-catalog-system', 'cms-banner-system', 'content-management-system', 'website-maintenance', 'banner-order-system', 'responsive-web-design', 'logo-design', 'psdto-html5', 'psd-design', 'wordpress-woocommerce', 'joomla-virtueMart', 'magento-ecommerce', 'opencart-ecommerce', 'paypal-integration', 'DIBS-integration', 'local-payment-getway-integration', 'wordpress-plugin-development', 'joomla-module-development', 'joomla-plugin-development', 'joomla-component-development', 'banner-design', 'html5-banner-development', 'cms-banner-development', 'flash-banner-development', 'gif-banner-development', 'static-banner-development', '3D-production', '3d-model', 'ar-model-visualization', 'clipping-path', 'multi-layer-clipping-element-masking', 'image-manipulation', 'background-removal', 'shadows', 'vectorizing-raster-to-vector-conversion', 'newspaper-advertisement', 'magazine-design-language-conversion'];
-                                            @endphp
                                             <li class="{{ request()->is('/') ? 'active' : '' }}"><a href="{{ url('/') }}">Home</a> </li>
                                             <li class="{{ request()->is('about-us') ? 'active' : '' }}"><a href="{{ url('about-us') }}">About Us</a></li>
-                                            <li class="{{ in_array(request()->path(), $services) ? 'active' : '' }}"><a href="#">Services</a>
-                                                <ul>
-                                                    <li><a href="#">Web Development</a>
-                                                        <ul>
-                                                            <li class="{{ request()->is('web-application-development') ? 'active' : '' }}"><a href="{{ url('web-application-development') }}">Web Application</a></li>
-                                                            <li class="{{ request()->is('digital-catalog-system') ? 'active' : '' }}"><a href="{{ url('digital-catalog-system') }}">Digital Catalog System</a></li>
-                                                            <li class="{{ request()->is('cms-banner-system') ? 'active' : '' }}"><a href="{{ url('cms-banner-system') }}">CMS Banner System</a></li>
-                                                            <li class="{{ request()->is('content-management-system') ? 'active' : '' }}"><a href="{{ url('content-management-system') }}">Content Management System</a></li>
-                                                            <li class="{{ request()->is('website-maintenance') ? 'active' : '' }}"><a href="{{ url('website-maintenance') }}">Website Maintenance</a></li>
-                                                            <li class="{{ request()->is('banner-order-system') ? 'active' : '' }}"><a href="{{ url('banner-order-system') }}">Banner Order System</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li><a href="#">Website Design</a>
-                                                        <ul>
-                                                            <li class="{{ request()->is('responsive-web-design') ? 'active' : '' }}"><a href="{{ url('responsive-web-design') }}">Responsive Web Design</a></li>
-                                                            <li class="{{ request()->is('logo-design') ? 'active' : '' }}"><a href="{{ url('logo-design') }}">Logo Design</a></li>
-                                                            <li class="{{ request()->is('psdto-html5') ? 'active' : '' }}"><a href="{{ url('psdto-html5') }}">PSD to XHTML/CSS3</a></li>
-                                                            <li class="{{ request()->is('psd-design') ? 'active' : '' }}"><a href="{{ url('psd-design') }}">PSD Design</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li><a href="#">Ecommerce Development</a>
-                                                        <ul>
-                                                            <li class="{{ request()->is('wordpress-woocommerce') ? 'active' : '' }}"><a href="{{ url('wordpress-woocommerce') }}">WordPress WooCommerce</a></li>
-                                                            <li class="{{ request()->is('joomla-virtueMart') ? 'active' : '' }}"><a href="{{ url('joomla-virtueMart') }}">Joomla VirtueMart</a></li>
-                                                            <li class="{{ request()->is('magento-ecommerce') ? 'active' : '' }}"><a href="{{ url('magento-ecommerce') }}">Magento Ecommerce</a></li>
-                                                            <li class="{{ request()->is('opencart-ecommerce') ? 'active' : '' }}"><a href="{{ url('opencart-ecommerce') }}">Opencart Ecommerce</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li><a href="#">Payment Gateway Solutions</a>
-                                                        <ul>
-                                                            <li class="{{ request()->is('paypal-integration') ? 'active' : '' }}"><a href="{{ url('paypal-integration') }}">Paypal Integration</a></li>
-                                                            <li class="{{ request()->is('DIBS-integration') ? 'active' : '' }}"><a href="{{ url('DIBS-integration') }}">DIBS Integration</a></li>
-                                                            <li class="{{ request()->is('local-payment-getway-integration') ? 'active' : '' }}"><a href="{{ url('local-payment-getway-integration') }}">Local Payment Gateway</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li><a href="#">CMS Extensions</a>
-                                                        <ul>
-                                                            <li class="{{ request()->is('wordpress-plugin-development') ? 'active' : '' }}"><a href="{{ url('wordpress-plugin-development') }}">WordPress Plugin</a></li>
-                                                            <li class="{{ request()->is('joomla-module-development') ? 'active' : '' }}"><a href="{{ url('joomla-module-development') }}">Joomla Module</a></li>
-                                                            <li class="{{ request()->is('joomla-plugin-development') ? 'active' : '' }}"><a href="{{ url('joomla-plugin-development') }}">Joomla Plugin</a></li>
-                                                            <li class="{{ request()->is('joomla-component-development') ? 'active' : '' }}"><a href="{{ url('joomla-component-development') }}">Joomla Component</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li><a href="#">Banner Production</a>
-                                                        <ul>
-                                                            <li class="{{ request()->is('banner-design') ? 'active' : '' }}"><a href="{{ url('banner-design') }}">Banner Design</a></li>
-                                                            <li class="{{ request()->is('html5-banner-development') ? 'active' : '' }}"><a href="{{ url('html5-banner-development') }}">HTML5 Banner</a></li>
-                                                            <li class="{{ request()->is('cms-banner-development') ? 'active' : '' }}"><a href="{{ url('cms-banner-development') }}">CMS Banner</a></li>
-                                                            <li class="{{ request()->is('flash-banner-development') ? 'active' : '' }}"><a href="{{ url('flash-banner-development') }}">Flash Banner</a></li>
-                                                            <li class="{{ request()->is('gif-banner-development') ? 'active' : '' }}"><a href="{{ url('gif-banner-development') }}">GIF Banner</a></li>
-                                                            <li class="{{ request()->is('static-banner-development') ? 'active' : '' }}"><a href="{{ url('static-banner-development') }}">Static Banner</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li><a href="{{ url('3D-production') }}">3D Production</a>
-                                                        <ul>
-                                                            <li class="{{ request()->is('3d-model') ? 'active' : '' }}"><a href="{{ url('3d-model') }}">3D Model</a></li>
-                                                            <li class="{{ request()->is('ar-model-visualization') ? 'active' : '' }}"><a href="{{ url('ar-model-visualization') }}">3D & AR/VR Model</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li><a href="#">Image Production</a>
-                                                        <ul>
-                                                            <li class="{{ request()->is('clipping-path') ? 'active' : '' }}"><a href="{{ url('clipping-path') }}">Clipping Path</a></li>
-                                                            <li class="{{ request()->is('multi-layer-clipping-element-masking') ? 'active' : '' }}"><a href="{{ url('multi-layer-clipping-element-masking') }}">Element Masking</a></li>
-                                                            <li class="{{ request()->is('image-manipulation') ? 'active' : '' }}"><a href="{{ url('image-manipulation') }}">Image Manipulation</a></li>
-                                                            <li class="{{ request()->is('background-removal') ? 'active' : '' }}"><a href="{{ url('background-removal') }}">Background Removal</a></li>
-                                                            <li class="{{ request()->is('shadows') ? 'active' : '' }}"><a href="{{ url('shadows') }}">Shadows</a></li>
-                                                            <li class="{{ request()->is('vectorizing-raster-to-vector-conversion') ? 'active' : '' }}"><a href="{{ url('vectorizing-raster-to-vector-conversion') }}">Vectorizing</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li><a href="#">Page Production</a>
-                                                        <ul>
-                                                            <li class="{{ request()->is('newspaper-advertisement') ? 'active' : '' }}"><a href="{{ url('newspaper-advertisement') }}">Newspaper Advertisement</a></li>
-                                                            <li class="{{ request()->is('magazine-design-language-conversion') ? 'active' : '' }}"><a href="{{ url('magazine-design-language-conversion') }}">Magazine Design</a></li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
+                                            
+                                            <li class="{{ request()->is('service/*') ? 'active' : '' }}"><a href="#">Services</a>
+                                                @if(isset($globalServiceCategories) && $globalServiceCategories->isNotEmpty())
+                                                    <ul>
+                                                        @foreach($globalServiceCategories as $category)
+                                                            <li><a href="#">{{ $category->name }}</a>
+                                                                @if($category->children->isNotEmpty() || $category->services->isNotEmpty())
+                                                                    <ul>
+                                                                        @foreach($category->children as $child)
+                                                                            <li><a href="#">{{ $child->name }}</a>
+                                                                                @if($child->services->isNotEmpty())
+                                                                                    <ul>
+                                                                                        @foreach($child->services as $service)
+                                                                                            <li class="{{ request()->is('service/' . $service->slug) ? 'active' : '' }}">
+                                                                                                <a href="{{ route('service.details', $service->slug) }}">{{ $service->title }}</a>
+                                                                                            </li>
+                                                                                        @endforeach
+                                                                                    </ul>
+                                                                                @endif
+                                                                            </li>
+                                                                        @endforeach
+
+                                                                        @foreach($category->services as $service)
+                                                                            <li class="{{ request()->is('service/' . $service->slug) ? 'active' : '' }}">
+                                                                                <a href="{{ route('service.details', $service->slug) }}">{{ $service->title }}</a>
+                                                                            </li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                @endif
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                @endif
                                             </li>
+                                            
                                             <li class="{{ request()->is('portfolio') ? 'active' : '' }}"><a href="{{ url('portfolio') }}">Portfolio</a> </li>
-                                            <li class="{{ request()->is('blog') ? 'active' : '' }}"><a href="{{ url('blog') }}">Our clients</a></li>
+                                            <li class="{{ request()->is('blog*') ? 'active' : '' }}"><a href="{{ url('blog') }}">Blog</a></li>
                                             <li class="{{ request()->is('contact-us') ? 'active' : '' }}"><a href="{{ url('contact-us') }}">Contact Us</a></li>
                                         </ul>
                                     </nav>
@@ -251,7 +265,13 @@
                                     <div class="featured-content">
                                         <!--  featured-content -->
                                         <div class="featured-desc">
-                                            <p>Ikramul Vila, 827/1, East Shewrapara [2nd Floor], Kafrul, Mirpur, Dhaka- 1216, Bangladesh.</p>
+                                            <p>
+                                                @if(isset($globalCorporateOffice) && is_array($globalCorporateOffice->addresses) && count($globalCorporateOffice->addresses) > 0)
+                                                    {{ is_array($globalCorporateOffice->addresses[0]) ? $globalCorporateOffice->addresses[0]['text'] : $globalCorporateOffice->addresses[0] }}
+                                                @else
+                                                    Ikramul Vila, 827/1, East Shewrapara [2nd Floor], Kafrul, Mirpur, Dhaka- 1216, Bangladesh.
+                                                @endif
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -260,7 +280,7 @@
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-6 order-md-3">
                             <div class="text-sm-right">
-                                <a class="ttm-btn ttm-btn-size-md ttm-btn-style-border ttm-icon-btn-left ttm-btn-color-white" href="mailto:contact@ggg24.design" title="">  contact@ggg24.design  <i class="fa fa-envelope-o"></i></a>
+                                <a class="ttm-btn ttm-btn-size-md ttm-btn-style-border ttm-icon-btn-left ttm-btn-color-white" href="mailto:{{ $topEmail }}" title="">  {{ $topEmail }}  <i class="fa fa-envelope-o"></i></a>
                             </div>
                         </div>
                     </div>
@@ -273,7 +293,8 @@
                             <div class="widget widget_text  clearfix">
                                 <h3 class="widget-title">About Our Company</h3>
                                 <div class="textwidget widget-text">
-Global Graphic Giant is one of the fastest growing and forward thinking ITES solution companies in Bangladesh, delivering outstanding software outsourcing services to clients in EU (Germany, France, Italy, UK, Spain), North America and Japan since 2006.                                </div>
+                                    {{ get_setting('company_short_description', 'Global Graphic Giant is one of the fastest growing and forward thinking ITES solution companies in Bangladesh, delivering outstanding software outsourcing services to clients in EU (Germany, France, Italy, UK, Spain), North America and Japan since 2006.') }}
+                                </div>
                                 <div class="quicklink-box">
                                     <!--  featured-icon-box -->
                                     <div class="featured-icon-box left-icon">
@@ -292,7 +313,13 @@ Global Graphic Giant is one of the fastest growing and forward thinking ITES sol
                                             </div>
                                             <div class="featured-title">
                                                 <!--  featured-title -->
-                                                <h5>+8801712528945, +8801612528945</h5>
+                                                <h5>
+                                                    @if(is_array($mainPhones) && count($mainPhones) > 0)
+                                                        {{ implode(', ', array_column($mainPhones, 'text')) }}
+                                                    @else
+                                                        +1 (416) 686-3111
+                                                    @endif
+                                                </h5>
                                             </div>
                                         </div>
                                     </div>
@@ -317,42 +344,32 @@ Global Graphic Giant is one of the fastest growing and forward thinking ITES sol
                             <div class="widget flicker_widget clearfix">
                                 <h3 class="widget-title">Contact Information</h3>
                                 <div class="row">
-                                    <div class="col-lg-6">
-
-                                        <h6>Dhaka Office</h6>
-                                        <p>Ikramul Vila,<br>
-                                            827/1,
-                                            East Shewrapara [2nd Floor],
-                                            Kafrul, Mirpur, Dhaka- 1216, Bangladesh.
-                                            <br/>
-
-                                            <i class="fa fa-phone"></i> +8801712528945, +8801612528945<br/>
-                                            <i class="fa fa-envelope-o"></i><a href="mailto:contact@ggg24.design">  contact@ggg24.design </a>
-                                        </p><br/>
-
-                                        <h6>Danish Office</h6>
-                                        <p>Højvangsvej 41 2600 Glostrup Denmark<br/>
-                                            <i class="fa fa-phone"></i> +45 89 87 06 63<br/>
-                                            <i class="fa fa-envelope-o"></i><a href="mailto:contact@ggg24.design">  contact@ggg24.design </a>
-
-                                        </p>
-
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <h6> Canada Office</h6>
-                                        <p>7 Chatterson Street, Whitby, Ontario, Canada, L1R 0B1<br/>
-                                            <i class="fa fa-phone"></i> +1 (416) 686-3111<br/>
-                                            <i class="fa fa-phone"></i> +1 (888) 340-9240 ( Toll free )<br/>
-                                            <i class="fa fa-envelope-o"></i><a href="mailto:contact@ggg24.design"> contact@ggg24.design</a>
-
-                                        </p><br/>
-
-                                        <h6>U.S.A Office</h6>
-                                        <p>410 Mercedes Street Benbrook TX-76126 U.S.A <br/>
-                                            <i class="fa fa-phone"></i> +1 (817) 249-9595<br/>
-                                            <i class="fa fa-envelope-o"></i><a href="mailto:contact@ggg24.design"> contact@ggg24.design</a>
-                                        </p>
-                                    </div>
+                                    @if(isset($globalContactInfos) && $globalContactInfos->isNotEmpty())
+                                        @foreach($globalContactInfos->chunk(ceil($globalContactInfos->count() / 2)) as $chunk)
+                                            <div class="col-lg-6">
+                                                @foreach($chunk as $info)
+                                                    <h6>{{ $info->office_name }}</h6>
+                                                    <p>
+                                                        @if(is_array($info->addresses))
+                                                            @foreach($info->addresses as $address)
+                                                                {{ $address['text'] ?? $address }}<br/>
+                                                            @endforeach
+                                                        @endif
+                                                        @if(is_array($info->phones))
+                                                            @foreach($info->phones as $phone)
+                                                                <i class="{{ mapIcon(is_array($phone) ? ($phone['icon'] ?? 'fas fa-phone') : 'fas fa-phone') }}"></i> {{ is_array($phone) ? ($phone['text'] ?? '') : $phone }}<br/>
+                                                            @endforeach
+                                                        @endif
+                                                        @if(is_array($info->emails))
+                                                            @foreach($info->emails as $email)
+                                                                <i class="{{ mapIcon(is_array($email) ? ($email['icon'] ?? 'fas fa-envelope') : 'fas fa-envelope') }}"></i> <a href="mailto:{{ is_array($email) ? ($email['text'] ?? '') : $email }}"> {{ is_array($email) ? ($email['text'] ?? '') : $email }} </a><br/>
+                                                            @endforeach
+                                                        @endif
+                                                    </p><br/>
+                                                @endforeach
+                                            </div>
+                                        @endforeach
+                                    @endif
                                 </div>
 
                                 <div class="textwidget widget-text">
@@ -361,11 +378,12 @@ Global Graphic Giant is one of the fastest growing and forward thinking ITES sol
                                     <h5 class="mb-20">Follow Us On</h5>
                                     <div class="social-icons circle social-hover">
                                         <ul class="list-inline">
-                                            <li class="social-facebook"><a class="tooltip-top" target="_blank" href="https://www.facebook.com/Shehala.IT.Limited" data-tooltip="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
-                                            <li class="social-twitter"><a class="tooltip-top" target="_blank" href="https://twitter.com/ShehalaItLtd" data-tooltip="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-                                            <li class="social-flickr"><a class=" tooltip-top" target="_blank" href="#" data-tooltip="flickr"><i class="fa fa-flickr" aria-hidden="true"></i></a></li>
-                                            <li class="social-linkedin"><a class=" tooltip-top" target="_blank" href="https://bd.linkedin.com/in/shehala"
-                                                    data-tooltip="LinkedIn"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+                                            @if(is_array($socialLinks) && count($socialLinks) > 0)
+                                                @foreach($socialLinks as $social)
+                                                @php $sName = $social['name'] ?? getSocialName($social['icon']); @endphp
+                                                <li class="social-{{ strtolower($sName) }}"><a class="tooltip-top" target="_blank" href="{{ $social['text'] }}" data-tooltip="{{ $sName }}"><i class="{{ mapIcon($social['icon']) }}" aria-hidden="true"></i></a></li>
+                                                @endforeach
+                                            @endif
                                         </ul>
                                     </div>
                                 </div>
@@ -379,7 +397,7 @@ Global Graphic Giant is one of the fastest growing and forward thinking ITES sol
                     <div class="row copyright">
                         <div class="col-md-6">
                             <div class="">
-                                <span>Copyright &copy; {{ date('Y') }}&nbsp;Global Graphic Giant - All right reserved.</span>
+                                <span>Copyright &copy; {{ date('Y') }}&nbsp;{{ get_setting('site_title', 'Global Graphic Giant') }} - All right reserved.</span>
 
                             </div>
                         </div>

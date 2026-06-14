@@ -13,7 +13,7 @@ class ContactController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'massage' => 'required|string', // Keeping this as 'massage' because the HTML input has name="massage"
+            'message' => 'required|string',
             'phone' => 'nullable|string|max:20',
             'businessname' => 'nullable|string|max:255',
             'services' => 'nullable|string|max:255',
@@ -23,7 +23,7 @@ class ContactController extends Controller
         Contact::create([
             'name' => $request->name,
             'email' => $request->email,
-            'message' => $request->massage, // mapping 'massage' to 'message' DB column
+            'message' => $request->message,
             'phone' => $request->phone,
             'businessname' => $request->businessname,
             'services' => $request->services,

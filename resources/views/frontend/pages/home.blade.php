@@ -397,169 +397,36 @@
                     <!-- row end -->
                     <!-- row -->
                     <div class="row">
-                        <div class="col-lg-4 col-md-4">
-                            <!-- featured-icon-box -->
-                            <div class="featured-icon-box style5 text-left mb-20">
-                                <div class="featured-icon">
-                                    <!-- featured-icon-->
-                                    <div class="ttm-icon ttm-icon_element-color-white ttm-icon_element-size-lg">
-                                        <i class="flaticon flaticon-developer"></i>
+                        @if(isset($globalServiceCategories) && $globalServiceCategories->isNotEmpty())
+                            @foreach($globalServiceCategories as $category)
+                                <div class="col-lg-4 col-md-4">
+                                    <!-- featured-icon-box -->
+                                    <div class="featured-icon-box style5 text-left mb-20">
+                                        <div class="featured-icon">
+                                            <!-- featured-icon-->
+                                            <div class="ttm-icon ttm-icon_element-color-white ttm-icon_element-size-lg">
+                                                <i class="{{ $category->icon ? (Str::startsWith($category->icon, 'flaticon-') ? 'flaticon ' . $category->icon : $category->icon) : 'flaticon flaticon-developer' }}"></i>
+                                            </div>
+                                        </div>
+                                        <!-- featured-icon -->
+                                        <div class="featured-content">
+                                            <!-- featured-content -->
+                                            <div class="featured-title">
+                                                <h5>{{ $category->name }}</h5>
+                                                <!-- featured-title -->
+                                            </div>
+                                            <div class="featured-desc">
+                                                <!-- featured-description -->
+                                                <p>{{ Str::limit($category->description ?? '', 150) }}</p>
+                                            </div>
+                                            <a class="ttm-btn ttm-btn-size-sm ttm-btn-color-white btn-inline ttm-icon-btn-right mt-15" href="{{ route('service.details', $category->slug) }}">Read More <i class="ti ti-angle-double-right"></i></a>
+                                        </div>
+                                        <!-- featured-content END-->
                                     </div>
+                                    <!-- featured-icon-box -->
                                 </div>
-                                <!-- featured-icon -->
-                                <div class="featured-content">
-                                    <!-- featured-content -->
-                                    <div class="featured-title">
-                                        <h5>Web Development</h5>
-                                        <!-- featured-title -->
-                                    </div>
-                                    <div class="featured-desc">
-                                        <!-- featured-description -->
-                                        <p>Global Graphic Giant Ltd. offers custom web application development on various technologies like Objective C, Java for Android, .NET, PHP, Action Script, CakePHP, MySQL, HTML5. As per the client's custom need</p>
-                                    </div>
-                                    <a class="ttm-btn ttm-btn-size-sm ttm-btn-color-white btn-inline ttm-icon-btn-right mt-15" href="web-development">Read More <i class="ti ti-angle-double-right"></i></a>
-                                </div>
-                                <!-- featured-content END-->
-                            </div>
-                            <!-- featured-icon-box -->
-                        </div>
-                        <div class="col-lg-4 col-md-4">
-                            <!-- featured-icon-box -->
-                            <div class="featured-icon-box style5 text-left mb-20">
-                                <div class="featured-icon">
-                                    <!-- featured-icon-->
-                                    <div class="ttm-icon ttm-icon_element-color-white ttm-icon_element-size-lg">
-                                        <i class="flaticon flaticon-code"></i>
-                                    </div>
-                                </div>
-                                <!-- featured-icon -->
-                                <div class="featured-content">
-                                    <!-- featured-content -->
-                                    <div class="featured-title">
-                                        <h5>Website Design</h5>
-                                        <!-- featured-title -->
-                                    </div>
-                                    <div class="featured-desc">
-                                        <!-- featured-description -->
-                                        <p>Web Design is essential to provider a user friendly experience for all users across all platforms (Desktops, Tablets & Smartphones). </p>
-                                    </div>
-                                    <a class="ttm-btn ttm-btn-size-sm ttm-btn-color-white btn-inline ttm-icon-btn-right mt-15" href="responsive-web-design">Read More <i class="ti ti-angle-double-right"></i></a>
-                                </div>
-                                <!-- featured-content END-->
-                            </div>
-                            <!-- featured-icon-box -->
-                        </div>
-                        <div class="col-lg-4 col-md-4">
-                            <!-- featured-icon-box -->
-                            <div class="featured-icon-box style5 text-left mb-20">
-                                <div class="featured-icon">
-                                    <!-- featured-icon-->
-                                    <div class="ttm-icon ttm-icon_element-color-white ttm-icon_element-size-lg">
-                                        <i class="flaticon flaticon-report"></i>
-                                    </div>
-                                </div>
-                                <!-- featured-icon -->
-                                <div class="featured-content">
-                                    <!-- featured-content -->
-                                    <div class="featured-title">
-                                        <h5>Ecommerce Development</h5>
-                                        <!-- featured-title -->
-                                    </div>
-                                    <div class="featured-desc">
-                                        <!-- featured-description -->
-                                        <p>Ecommerce development platforms to lunch a modern website. However, you would still need skillful experts to get a professional website for your business. </p>
-                                    </div>
-                                    <a class="ttm-btn ttm-btn-size-sm ttm-btn-color-white btn-inline ttm-icon-btn-right mt-15" href="ecommerce-development">Read More <i class="ti ti-angle-double-right"></i></a>
-                                </div>
-                                <!-- featured-content END-->
-                            </div>
-                            <!-- featured-icon-box -->
-                        </div>
-                    </div>
-                    <!-- row end-->
-                    <!-- row -->
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4">
-                            <!-- featured-icon-box -->
-                            <div class="featured-icon-box style5 text-left mb-20">
-                                <div class="featured-icon">
-                                    <!-- featured-icon-->
-                                    <div class="ttm-icon ttm-icon_element-color-white ttm-icon_element-size-lg">
-                                        <i class="flaticon flaticon-24h"></i>
-                                    </div>
-                                </div>
-                                <!-- featured-icon -->
-                                <div class="featured-content">
-                                    <!-- featured-content -->
-                                    <div class="featured-title">
-                                        <h5>Mobile Application Development</h5>
-                                        <!-- featured-title -->
-                                    </div>
-                                    <div class="featured-desc">
-                                        <!-- featured-description -->
-                                        <p>At Global Graphic Giant, we are aware of the applications you need for your phone. Therefore, we ensure that we create the application from the beginning through to the end to ensure the end users of the application
-                                            can utilize the application to their liking. </p>
-                                    </div>
-                                    <a class="ttm-btn ttm-btn-size-sm ttm-btn-color-white btn-inline ttm-icon-btn-right mt-15" href="web-development">Read More <i class="ti ti-angle-double-right"></i></a>
-                                </div>
-                                <!-- featured-content END-->
-                            </div>
-                            <!-- featured-icon-box -->
-                        </div>
-                        <div class="col-lg-4 col-md-4">
-                            <!-- featured-icon-box -->
-                            <div class="featured-icon-box style5 text-left mb-20">
-                                <div class="featured-icon">
-                                    <!-- featured-icon-->
-                                    <div class="ttm-icon ttm-icon_element-color-white ttm-icon_element-size-lg">
-                                        <i class="flaticon flaticon-report"></i>
-                                    </div>
-                                </div>
-                                <!-- featured-icon -->
-                                <div class="featured-content">
-                                    <!-- featured-content -->
-                                    <div class="featured-title">
-                                        <h5>Banner Production</h5>
-                                        <!-- featured-title -->
-                                    </div>
-                                    <div class="featured-desc">
-                                        <!-- featured-description -->
-                                        <p>Our expert Graphics Designer can create elegant, simple, clean & eye-catching Banner or Slider that will match with your exiting brand. We have great experience & skill to create Banner or Website header for your
-                                            Business on different occasion & events. </p>
-                                    </div>
-                                    <a class="ttm-btn ttm-btn-size-sm ttm-btn-color-white btn-inline ttm-icon-btn-right mt-15" href="banner-design">Read More <i class="ti ti-angle-double-right"></i></a>
-                                </div>
-                                <!-- featured-content END-->
-                            </div>
-                            <!-- featured-icon-box -->
-                        </div>
-                        <div class="col-lg-4 col-md-4">
-                            <!-- featured-icon-box -->
-                            <div class="featured-icon-box style5 text-left mb-20">
-                                <div class="featured-icon">
-                                    <!-- featured-icon-->
-                                    <div class="ttm-icon ttm-icon_element-color-white ttm-icon_element-size-lg">
-                                        <i class="flaticon flaticon-computer"></i>
-                                    </div>
-                                </div>
-                                <!-- featured-icon -->
-                                <div class="featured-content">
-                                    <!-- featured-content -->
-                                    <div class="featured-title">
-                                        <h5>Image Production</h5>
-                                        <!-- featured-title -->
-                                    </div>
-                                    <div class="featured-desc">
-                                        <!-- featured-description -->
-                                        <p>Global Graphic Giant is one of the most fascinating images editing service provider. That provides excellent quality of isolating image editing services. Our company will guarantee you the best quality done images.
-                                            </p>
-                                    </div>
-                                    <a class="ttm-btn ttm-btn-size-sm ttm-btn-color-white btn-inline ttm-icon-btn-right mt-15" href="clipping-path">Read More <i class="ti ti-angle-double-right"></i></a>
-                                </div>
-                                <!-- featured-content END-->
-                            </div>
-                            <!-- featured-icon-box -->
-                        </div>
+                            @endforeach
+                        @endif
                     </div>
                     <!-- row end-->
                 </div>
@@ -881,167 +748,38 @@
         <!-- row -->
         <div class="row multi-columns-row ttm-boxes-spacing-10px ttm-bgcolor-white">
 
-            <!-- Item 1 -->
-            <div class="ttm-box-col-wrapper col-lg-4 col-md-6 col-sm-6">
-                <div class="featured-imagebox featured-imagebox-portfolio style2">
+            @if(isset($recentPortfolios) && $recentPortfolios->isNotEmpty())
+                @foreach($recentPortfolios as $portfolio)
+                <!-- Item -->
+                <div class="ttm-box-col-wrapper col-lg-4 col-md-6 col-sm-6">
+                    <div class="featured-imagebox featured-imagebox-portfolio style2">
 
-                    <div class="featured-thumbnail">
-                        <img class="img-fluid"
-                             src="{{ asset('frontend/images/portfolio-images/FnFrTDMZtBZhigI46dtB.jpg') }}"
-                             alt="Århus Håndbold">
-                    </div>
-
-                    <div class="featured-content">
-                        <div class="category">
-                            <p>WordPress</p>
+                        <div class="featured-thumbnail">
+                            @if($portfolio->image)
+                                <img class="img-fluid" src="{{ asset($portfolio->image) }}" alt="{{ $portfolio->title }}">
+                            @else
+                                <img class="img-fluid" src="{{ asset('frontend/images/portfolio-images/default.jpg') }}" alt="Default">
+                            @endif
                         </div>
 
-                        <div class="featured-title">
-                            <h5>
-                                <a href="{{ url('portfolio-details/6/1') }}">
-                                    Århus Håndbold
-                                </a>
-                            </h5>
-                        </div>
-                    </div>
+                        <div class="featured-content">
+                            <div class="category">
+                                <p>{{ $portfolio->category->name ?? 'Uncategorized' }}</p>
+                            </div>
 
+                            <div class="featured-title">
+                                <h5>
+                                    <a href="{{ url('portfolio-details/' . $portfolio->id . '/' . ($portfolio->category_id ?? 1)) }}">
+                                        {{ $portfolio->title }}
+                                    </a>
+                                </h5>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-            </div>
-
-            <!-- Item 2 -->
-            <div class="ttm-box-col-wrapper col-lg-4 col-md-6 col-sm-6">
-                <div class="featured-imagebox featured-imagebox-portfolio style2">
-
-                    <div class="featured-thumbnail">
-                        <img class="img-fluid"
-                             src="{{ asset('frontend/images/portfolio-images/ZmzoV1cxPYFGu8UeT4Pi.jpg') }}"
-                             alt="JPL Golf">
-                    </div>
-
-                    <div class="featured-content">
-                        <div class="category">
-                            <p>WordPress</p>
-                        </div>
-
-                        <div class="featured-title">
-                            <h5>
-                                <a href="{{ url('portfolio-details/12/1') }}">
-                                    JPL Golf
-                                </a>
-                            </h5>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Item 3 -->
-            <div class="ttm-box-col-wrapper col-lg-4 col-md-6 col-sm-6">
-                <div class="featured-imagebox featured-imagebox-portfolio style2">
-
-                    <div class="featured-thumbnail">
-                        <img class="img-fluid"
-                             src="{{ asset('frontend/images/portfolio-images/Ld8r6TL3KDgDPBlc4HOt.jpg') }}"
-                             alt="Allt om handarbete">
-                    </div>
-
-                    <div class="featured-content">
-                        <div class="category">
-                            <p>Joomla</p>
-                        </div>
-
-                        <div class="featured-title">
-                            <h5>
-                                <a href="{{ url('portfolio-details/14/2') }}">
-                                    Allt om handarbete
-                                </a>
-                            </h5>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Item 4 -->
-            <div class="ttm-box-col-wrapper col-lg-4 col-md-6 col-sm-6">
-                <div class="featured-imagebox featured-imagebox-portfolio style2">
-
-                    <div class="featured-thumbnail">
-                        <img class="img-fluid"
-                             src="{{ asset('frontend/images/portfolio-images/2SC6qwIRc7mX6zKYKIdz.jpg') }}"
-                             alt="Divider">
-                    </div>
-
-                    <div class="featured-content">
-                        <div class="category">
-                            <p>3D Services</p>
-                        </div>
-
-                        <div class="featured-title">
-                            <h5>
-                                <a href="{{ url('portfolio-details/24/11') }}">
-                                    Divider
-                                </a>
-                            </h5>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Item 5 -->
-            <div class="ttm-box-col-wrapper col-lg-4 col-md-6 col-sm-6">
-                <div class="featured-imagebox featured-imagebox-portfolio style2">
-
-                    <div class="featured-thumbnail">
-                        <img class="img-fluid"
-                             src="{{ asset('frontend/images/portfolio-images/piQ1zfM7onZ3ClcGxRHr.jpg') }}"
-                             alt="Burda Style">
-                    </div>
-
-                    <div class="featured-content">
-                        <div class="category">
-                            <p>Magazine Design</p>
-                        </div>
-
-                        <div class="featured-title">
-                            <h5>
-                                <a href="{{ url('portfolio-details/34/13') }}">
-                                    Burda Style
-                                </a>
-                            </h5>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Item 6 -->
-            <div class="ttm-box-col-wrapper col-lg-4 col-md-6 col-sm-6">
-                <div class="featured-imagebox featured-imagebox-portfolio style2">
-
-                    <div class="featured-thumbnail">
-                        <img class="img-fluid"
-                             src="{{ asset('frontend/images/portfolio-images/PAIsGUEnKWC1zNCEXzFN.jpg') }}"
-                             alt="Newspaper Add">
-                    </div>
-
-                    <div class="featured-content">
-                        <div class="category">
-                            <p>Newspaper Add</p>
-                        </div>
-
-                        <div class="featured-title">
-                            <h5>
-                                <a href="{{ url('portfolio-details/39/14') }}">
-                                    Newspaper Add
-                                </a>
-                            </h5>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
+                @endforeach
+            @endif
 
             <!-- Button -->
             <div class="col-md-12 text-center mt-4">
@@ -1128,115 +866,48 @@
                     <div class="row">
                         <!-- blog-slide -->
                         <div class="blog-slide owl-carousel owl-theme owl-loaded " data-item="3" data-nav="false" data-dots="false" data-auto="false">
-                            <!-- featured-imagebox-blog -->
-                            <div class="featured-imagebox featured-imagebox-blog">
-                                <div class="featured-thumbnail">
-                                    <!-- featured-thumbnail -->
-                                    <img class="img-fluid" src="{{ asset('frontend/images/') }}/blog/shehala-ecommerce.png" alt="">
-                                    <div class="ttm-blog-overlay-iconbox">
-                                        <a href="role-and-essence-of-clipping-path-services-for-modern-ecommerce"><i class="ti ti-plus"></i></a>
+                            @if(isset($recentBlogs) && $recentBlogs->isNotEmpty())
+                                @foreach($recentBlogs as $blog)
+                                <!-- featured-imagebox-blog -->
+                                <div class="featured-imagebox featured-imagebox-blog">
+                                    <div class="featured-thumbnail">
+                                        <!-- featured-thumbnail -->
+                                        @if($blog->thumbnail)
+                                            <img class="img-fluid" src="{{ asset('storage/' . $blog->thumbnail) }}" alt="{{ $blog->title }}">
+                                        @else
+                                            <img class="img-fluid" src="{{ asset('frontend/images/blog/default.jpg') }}" alt="Default Thumbnail">
+                                        @endif
+                                        <div class="ttm-blog-overlay-iconbox">
+                                            <a href="{{ url('blog/' . $blog->slug) }}"><i class="ti ti-plus"></i></a>
+                                        </div>
+                                        <div class="ttm-box-view-overlay"></div>
                                     </div>
-                                    <div class="ttm-box-view-overlay"></div>
+                                    <div class="featured-content">
+                                        <!-- featured-content -->
+                                        <div class="ttm-box-post-date">
+                                            <!-- ttm-box-post-date -->
+                                            <span class="ttm-entry-date">
+                                                <time class="entry-date" datetime="{{ $blog->created_at->toIso8601String() }}">{{ $blog->created_at->format('d') }}<span class="entry-month entry-year">{{ $blog->created_at->format('M') }}</span></time>
+                                            </span>
+                                        </div>
+                                        <div class="featured-title">
+                                            <!-- featured-title -->
+                                            <h5><a href="{{ url('blog/' . $blog->slug) }}">{{ $blog->title }}</a></h5>
+                                        </div>
+                                        <div class="post-meta">
+                                            <!-- post-meta -->
+                                            <span class="ttm-meta-line"><i class="fa fa-user"></i> Admin</span>
+                                        </div>
+                                        <div class="featured-desc">
+                                            <!-- featured-description -->
+                                            <p>{{ \Illuminate\Support\Str::limit(strip_tags($blog->content), 100) }}</p>
+                                        </div>
+                                        <a class="ttm-btn ttm-btn-size-sm ttm-btn-color-skincolor btn-inline ttm-icon-btn-right mt-20" href="{{ url('blog/' . $blog->slug) }}">Read More <i class="ti ti-angle-double-right"></i></a>
+                                    </div>
                                 </div>
-                                <div class="featured-content">
-                                    <!-- featured-content -->
-                                    <div class="ttm-box-post-date">
-                                        <!-- ttm-box-post-date -->
-                                        <span class="ttm-entry-date">
-                                            <time class="entry-date" datetime="2019-01-16T07:07:55+00:00">8<span class="entry-month entry-year">Feb</span></time>
-                                        </span>
-                                    </div>
-                                    <div class="featured-title">
-                                        <!-- featured-title -->
-                                        <h5><a href="role-and-essence-of-clipping-path-services-for-modern-ecommerce">Role and Essence of Clipping Path Services for Modern Ecommerce</a></h5>
-                                    </div>
-                                    <div class="post-meta">
-                                        <!-- post-meta -->
-                                        <span class="ttm-meta-line"><i class="fa fa-comments"></i> comments</span>
-                                        <span class="ttm-meta-line"><i class="fa fa-user"></i> Shehala</span>
-
-                                    </div>
-                                    <div class="featured-desc">
-                                        <!-- featured-description -->
-                                        <p>It is now common knowledge that clipping path design has a dominant role in modern online marketing. Among most...</p>
-                                    </div>
-                                    <a class="ttm-btn ttm-btn-size-sm ttm-btn-color-skincolor btn-inline ttm-icon-btn-right mt-20" href="role-and-essence-of-clipping-path-services-for-modern-ecommerce">Read More <i class="ti ti-angle-double-right"></i></a>
-                                </div>
-                            </div>
-                            <!-- featured-imagebox-blog end -->
-                            <!-- featured-imagebox-blog -->
-                            <div class="featured-imagebox featured-imagebox-blog">
-                                <div class="featured-thumbnail">
-                                    <!-- featured-thumbnail -->
-                                    <img class="img-fluid" src="{{ asset('frontend/images/') }}/blog/online_business.png" alt="">
-                                    <div class="ttm-blog-overlay-iconbox">
-                                        <a href="7-image-editing-tips-to-dominate-in-online-business"><i class="ti ti-plus"></i></a>
-                                    </div>
-                                    <div class="ttm-box-view-overlay"></div>
-                                </div>
-                                <div class="featured-content">
-                                    <!-- featured-content -->
-                                    <div class="ttm-box-post-date">
-                                        <!-- ttm-box-post-date -->
-                                        <span class="ttm-entry-date">
-                                            <time class="entry-date" datetime="2019-01-16T07:07:55+00:00">10<span class="entry-month entry-year">Feb</span></time>
-                                        </span>
-                                    </div>
-                                    <div class="featured-title">
-                                        <!-- featured-title -->
-                                        <h5><a href="7-image-editing-tips-to-dominate-in-online-business">Seven Image Editing Tips To Dominate In Online Business</a></h5>
-                                    </div>
-                                    <div class="post-meta">
-                                        <!-- post-meta -->
-                                        <span class="ttm-meta-line"><i class="fa fa-comments"></i> comments</span>
-                                        <span class="ttm-meta-line"><i class="fa fa-user"></i> Shehala</span>
-
-                                    </div>
-                                    <div class="featured-desc">
-                                        <!-- featured-description -->
-                                        <p>If you are planning to set up an online business or take your business ahead, you should consider...</p>
-                                    </div>
-                                    <a class="ttm-btn ttm-btn-size-sm ttm-btn-color-skincolor btn-inline ttm-icon-btn-right mt-20" href="7-image-editing-tips-to-dominate-in-online-business">Read More <i class="ti ti-angle-double-right"></i></a>
-                                </div>
-                            </div>
-                            <!-- featured-imagebox-blog end -->
-                            <!-- featured-imagebox-blog -->
-                            <div class="featured-imagebox featured-imagebox-blog">
-                                <div class="featured-thumbnail">
-                                    <!-- featured-thumbnail -->
-                                    <img class="img-fluid" src="{{ asset('frontend/images/') }}/blog/visual_content.png" alt="">
-                                    <div class="ttm-blog-overlay-iconbox">
-                                        <a href="8-reasons-why-visual-content-is-important-for-online-marketing"><i class="ti ti-plus"></i></a>
-                                    </div>
-                                    <div class="ttm-box-view-overlay"></div>
-                                </div>
-                                <div class="featured-content">
-                                    <!-- featured-content -->
-                                    <div class="ttm-box-post-date">
-                                        <!-- ttm-box-post-date -->
-                                        <span class="ttm-entry-date">
-                                            <time class="entry-date" datetime="2019-01-16T07:07:55+00:00">13<span class="entry-month entry-year">Feb</span></time>
-                                        </span>
-                                    </div>
-                                    <div class="featured-title">
-                                        <!-- featured-title -->
-                                        <h5><a href="8-reasons-why-visual-content-is-important-for-online-marketing">Eight Reasons Why Visual Content is Important for Online Marketing</a></h5>
-                                    </div>
-                                    <div class="post-meta">
-                                        <!-- post-meta -->
-                                        <span class="ttm-meta-line"><i class="fa fa-comments"></i> comments</span>
-                                        <span class="ttm-meta-line"><i class="fa fa-user"></i> Shehala</span>
-
-                                    </div>
-                                    <div class="featured-desc">
-                                        <!-- featured-description -->
-                                        <p>Every day millions of contents are posted online in different forms of posts like blog articles, e-books</p>
-                                    </div>
-                                    <a class="ttm-btn ttm-btn-size-sm ttm-btn-color-skincolor btn-inline ttm-icon-btn-right mt-20" href="8-reasons-why-visual-content-is-important-for-online-marketing">Read More <i class="ti ti-angle-double-right"></i></a>
-                                </div>
-                            </div>
-                            <!-- featured-imagebox-blog end -->
-
+                                <!-- featured-imagebox-blog end -->
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                     <!-- row end -->

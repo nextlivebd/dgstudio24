@@ -1,49 +1,35 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-<!-- START homeclassicmain REVOLUTION SLIDER 6.0.1 -->
-       
-            <div class="home-slider">
-
-              
-            </div>
-        <!-- END REVOLUTION SLIDER -->
-       
-
-        <!--site-main start-->
-        <div class="site-main">
-
-           
-  <!-- page-title -->
-  <div class="about-bg">
-  <div class="ttm-page-title-row">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12"> 
-                        <div class="aboutbg">
-                        <div class="title-box text-center">
-                            <div class="page-title-heading">
-                                <h1 class="title">About Us</h1>
-                            </div><!-- /.page-title-captions -->
-                            <div class="breadcrumb-wrapper">
-                                <span>
-                                    <a title="Homepage" href="https://www.shehala.com"><i class="ti ti-home"></i>&nbsp;&nbsp;Home</a>
-                                </span>
-                                <span class="ttm-bread-sep">&nbsp; : : &nbsp;</span>
-                                <span>About Us</span>
-                            </div>  
+@php
+    $bgImage = get_setting('page_banner_image') ? asset(get_setting('page_banner_image')) : asset('frontend/images/aboutbg.jpg');
+@endphp
+<div class="about-bg" style="background-image: url('{{ $bgImage }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    <div class="ttm-page-title-row">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12"> 
+                    <div class="title-box text-center">
+                        <div class="page-title-heading">
+                            <h1 class="title">About Us</h1>
                         </div>
-                        </div>
-                    </div><!-- /.col-md-12 -->  
-                </div><!-- /.row -->  
-            </div><!-- /.container -->                      
-        </div><!-- page-title end-->
+                        <div class="breadcrumb-wrapper">
+                            <span>
+                                <a title="Homepage" href="{{ url('/') }}"><i class="ti ti-home"></i>&nbsp;&nbsp;Home</a>
+                            </span>
+                            <span class="ttm-bread-sep">&nbsp; : : &nbsp;</span>
+                            <span>About Us</span>
+                        </div>  
+                    </div>
+                </div>  
+            </div>  
+        </div>                      
+    </div><!-- page-title end-->
 </div>
-        <!--site-main start-->
-           <!--site-main start-->
-           <div class="site-main">
 
-<!-- aboutus-section -->
+<!--site-main start-->
+<div class="site-main">
+
 <section class="ttm-row aboutus-section clearfix">
     <div class="container">
         <div class="row"><!-- row -->

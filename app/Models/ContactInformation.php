@@ -15,6 +15,7 @@ class ContactInformation extends Model
         'emails',
         'map_embed',
         'is_active',
+        'is_corporate',
     ];
 
     protected $casts = [
@@ -22,5 +23,6 @@ class ContactInformation extends Model
         'phones' => 'array',
         'emails' => 'array',
         'is_active' => 'boolean',
+        'is_corporate' => 'boolean',
     ];
 }

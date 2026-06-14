@@ -31,12 +31,26 @@ Route::middleware('admin')->group(function () {
     
     // Contacts (Frontend submissions)
     Route::get('/contacts', [\App\Http\Controllers\Admin\ContactController::class, 'index'])->name('contacts.index');
+    Route::get('/contacts/{contact}', [\App\Http\Controllers\Admin\ContactController::class, 'show'])->name('contacts.show');
+    Route::delete('/contacts/{contact}', [\App\Http\Controllers\Admin\ContactController::class, 'destroy'])->name('contacts.destroy');
 
     // Office Contact Informations
     Route::resource('contact-informations', \App\Http\Controllers\Admin\ContactInformationController::class)->except(['show']);
 
     // Categories
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class)->except(['show']);
+
+    // Service Categories
+    Route::resource('service-categories', \App\Http\Controllers\Admin\ServiceCategoryController::class)->except(['show']);
+
+    // Services
+    Route::resource('services', \App\Http\Controllers\Admin\ServiceController::class)->except(['show']);
+
+    // Portfolio Categories
+    Route::resource('portfolio-categories', \App\Http\Controllers\Admin\PortfolioCategoryController::class)->except(['show']);
+
+    // Portfolios
+    Route::resource('portfolios', \App\Http\Controllers\Admin\PortfolioController::class)->except(['show']);
 
     // Blogs
     Route::post('blogs/upload-image', [\App\Http\Controllers\Admin\BlogController::class, 'uploadImage'])->name('blogs.uploadImage');

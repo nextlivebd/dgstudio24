@@ -1,21 +1,11 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-<!-- START homeclassicmain REVOLUTION SLIDER 6.0.1 -->
-       
-            <div class="home-slider">
-
-              
-            </div>
-        <!-- END REVOLUTION SLIDER -->
-       
-
-        <!--site-main start-->
-        <div class="site-main">
-
-           
 <!-- page-title -->
-<div class="contactbg">
+@php
+    $bgImage = get_setting('page_banner_image') ? asset(get_setting('page_banner_image')) : asset('frontend/images/aboutbg.jpg');
+@endphp
+<div class="contactbg" style="background-image: url('{{ $bgImage }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
     <div class="ttm-page-title-row">
         <div class="container">
             <div class="row">
@@ -23,19 +13,19 @@
                     <div class="title-box text-center">
                         <div class="page-title-heading">
                             <h1 class="title"> Contact Us</h1>
-                        </div><!-- /.page-title-captions -->
+                        </div>
                         <div class="breadcrumb-wrapper">
                             <span>
-                                <a title="Homepage" href="https://shehala.com"><i class="ti ti-home"></i>&nbsp;&nbsp;Home</a>
+                                <a title="Homepage" href="{{ url('/') }}"><i class="ti ti-home"></i>&nbsp;&nbsp;Home</a>
                             </span>
                             <span class="ttm-bread-sep">&nbsp; : : &nbsp;</span>
                             <span> Contact us</span>
                         </div>
                     </div>
-                </div><!-- /.col-md-12 -->
-            </div><!-- /.row -->
-        </div><!-- /.container -->
-    </div><!-- page-title end-->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!--site-main start-->
@@ -55,128 +45,55 @@
                                 <h2 class="title">Our Address</h2>
                             </div>
                         </div><!-- section title end -->
-                        <div class="row">
-                            <div class="col-12">
-                                <!-- featured-icon-box -->
-                                <div class="featured-icon-box style2 left-icon icon-align-top">
-                                    <div class="featured-icon">
-                                        <!-- featured-icon -->
-                                        <div class="ttm-icon ttm-icon_element-bgcolor-skincolor ttm-icon_element-size-md ttm-icon_element-style-round">
-                                            <i class="fa fa-map-marker"></i>
+                        
+                        @if(isset($contactInfos) && $contactInfos->isNotEmpty())
+                            @foreach($contactInfos as $info)
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="featured-icon-box style2 left-icon icon-align-top">
+                                        <div class="featured-icon">
+                                            <div class="ttm-icon ttm-icon_element-bgcolor-skincolor ttm-icon_element-size-md ttm-icon_element-style-round">
+                                                <i class="fa fa-map-marker"></i>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="featured-content">
-                                        <div class="featured-title">
-                                            <!-- featured title -->
-                                            <h5>Canada Office</h5>
-                                        </div>
-                                        <div class="featured-desc">
-                                            <!-- featured desc -->
-                                            <p>7 Chatterson Street Whitby, Ontario Canada, L1R 0B1<br>
-                                                <i class="fa fa-envelope-o"></i> <a href="mailto:contact@shehala.com"> contact@shehala.com </a><br />
-                                                <i class="fa fa-mobile"></i> +1 (416) 686-3111<br />
-                                                <i class="fa fa-phone"></i> +1 (888) 340-9240 (Toll free)<br />
+                                        <div class="featured-content">
+                                            <div class="featured-title">
+                                                <h5>{{ $info->office_name }}</h5>
+                                            </div>
+                                            <div class="featured-desc">
+                                                <p>
+                                                    @if(is_array($info->addresses) && count($info->addresses) > 0)
+                                                        @foreach($info->addresses as $address)
+                                                            <i class="{{ is_array($address) ? ($address['icon'] ?? 'fa fa-map-marker') : 'fa fa-map-marker' }}"></i> {{ is_array($address) ? ($address['text'] ?? '') : $address }}<br>
+                                                        @endforeach
+                                                    @endif
 
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- separator -->
-                        <div class="separator">
-                            <div class="sep-line mt-25 mb-25"></div>
-                        </div>
-                        <!-- separator -->
-                        <div class="row">
-                            <div class="col-12">
-                                <!-- featured-icon-box -->
-                                <div class="featured-icon-box style2 left-icon icon-align-top">
-                                    <div class="featured-icon">
-                                        <!-- featured-icon -->
-                                        <div class="ttm-icon ttm-icon_element-bgcolor-skincolor ttm-icon_element-size-md ttm-icon_element-style-round">
-                                            <i class="fa fa-map-marker"></i>
-                                        </div>
-                                    </div>
-                                    <div class="featured-content">
-                                        <div class="featured-title">
-                                            <!-- featured title -->
-                                            <h5>Danish Office</h5>
-                                        </div>
-                                        <div class="featured-desc">
-                                            <!-- featured desc -->
-                                            <p>Højvangsvej 41 2600 Glostrup Denmark<br />
+                                                    @if(is_array($info->emails) && count($info->emails) > 0)
+                                                        @foreach($info->emails as $email)
+                                                            <i class="{{ is_array($email) ? ($email['icon'] ?? 'fa fa-envelope-o') : 'fa fa-envelope-o' }}"></i> <a href="mailto:{{ is_array($email) ? ($email['text'] ?? '') : $email }}"> {{ is_array($email) ? ($email['text'] ?? '') : $email }} </a><br>
+                                                        @endforeach
+                                                    @endif
 
-                                                <i class="fa fa-envelope-o"></i> <a href="mailto:info@shehala.com">info@shehala.com</a><br />
-                                                <i class="fa fa-mobile"></i> +45 89 87 06 63<br />
-                                            </p>
+                                                    @if(is_array($info->phones) && count($info->phones) > 0)
+                                                        @foreach($info->phones as $phone)
+                                                            <i class="{{ is_array($phone) ? ($phone['icon'] ?? 'fa fa-phone') : 'fa fa-phone' }}"></i> {{ is_array($phone) ? ($phone['text'] ?? '') : $phone }}<br>
+                                                        @endforeach
+                                                    @endif
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- separator -->
-                        <div class="separator">
-                            <div class="sep-line mt-25 mb-25"></div>
-                        </div>
-                        <!-- separator -->
-                        <div class="row">
-                            <div class="col-12">
-                                <!-- featured-icon-box -->
-                                <div class="featured-icon-box style2 left-icon icon-align-top">
-                                    <div class="featured-icon">
-                                        <!-- featured-icon -->
-                                        <div class="ttm-icon ttm-icon_element-bgcolor-skincolor ttm-icon_element-size-md ttm-icon_element-style-round">
-                                            <i class="fa fa-map-marker"></i>
-                                        </div>
-                                    </div>
-                                    <div class="featured-content">
-                                        <div class="featured-title">
-                                            <!-- featured title -->
-                                            <h5>Dhaka Office</h5>
-                                        </div>
-                                        <div class="featured-desc">
-                                            <!-- featured desc -->
-                                            <p>House # 06, Road # 02, Block # H, Sector # 2 Aftabnagar, Dhaka 1212 Bangladesh.<br />
-                                                <i class="fa fa-envelope-o"></i> <a href="mailto:info@shehala.com"> info@shehala.com</a><br />
-                                                <i class="fa fa-mobile"></i> +88 09611741741
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+                            <!-- separator -->
+                            <div class="separator">
+                                <div class="sep-line mt-25 mb-25"></div>
                             </div>
-                        </div>
-                        <!-- separator -->
-                        <div class="separator">
-                            <div class="sep-line mt-25 mb-25"></div>
-                        </div>
-                        <!-- separator -->
-                        <div class="row">
-                            <div class="col-12">
-                                <!-- featured-icon-box -->
-                                <div class="featured-icon-box style2 left-icon icon-align-top">
-                                    <div class="featured-icon">
-                                        <!-- featured-icon -->
-                                        <div class="ttm-icon ttm-icon_element-bgcolor-skincolor ttm-icon_element-size-md ttm-icon_element-style-round">
-                                            <i class="fa fa-map-marker"></i>
-                                        </div>
-                                    </div>
-                                    <div class="featured-content">
-                                        <div class="featured-title">
-                                            <!-- featured title -->
-                                            <h5>U.S.A Office</h5>
-                                        </div>
-                                        <div class="featured-desc">
-                                            <!-- featured desc -->
-                                            <p>410 Mercedes Street Benbrook TX-76126 U.S.A.<br />
-                                                <i class="fa fa-envelope-o"></i> <a href="mailto:contact@shehala.com">contact@shehala.com</a><br />
-                                                <i class="fa fa-mobile"></i> +1 (817) 249-9595
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            @endforeach
+                        @else
+                            <p>Contact information not available at the moment.</p>
+                        @endif
+
                     </div>
                 </div>
                 <div class="col-lg-7">
@@ -191,78 +108,70 @@
                                 <p>Fields marked with an * are required</p>
                             </div>
                         </div><!-- section title end -->
-
-                                                <!-- <form id="ttm-quote-form" class="row ttm-quote-form clearfix" method="post" action="/contact-us">
-                            <input type="hidden" name="_token" value="tvS2DPnsic20jtayYVhoKs26wsrVlAXK45QFwhEe"> -->
-                        <form method="POST" action="https://shehala.com/contact-us" accept-charset="UTF-8" id="ttm-quote-form" class="row ttm-quote-form clearfix"><input name="_token" type="hidden" value="tvS2DPnsic20jtayYVhoKs26wsrVlAXK45QFwhEe">
-                        <div class="col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <input name="businessname" type="text" class="form-control bg-white" placeholder="Business Name">
+                        
+                        @if(session('success'))
+                            <div class="alert alert-success">{{ session('success') }}</div>
+                        @endif
+                        
+                        <form method="POST" action="{{ route('contact.submit') }}" accept-charset="UTF-8" id="ttm-quote-form" class="row ttm-quote-form clearfix">
+                            @csrf
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <input name="businessname" type="text" class="form-control bg-white" placeholder="Business Name">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <input name="name" type="text" placeholder="Contact Person*" required="required" class="form-control bg-white">
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <input name="name" type="text" placeholder="Contact Person*" required="required" class="form-control bg-white">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <input name="phone" type="text" placeholder="Phone" class="form-control bg-white">
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <input name="phone" type="text" placeholder="Phone" class="form-control bg-white">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <input name="email" type="text" placeholder="Email*" required="required" class="form-control bg-white">
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <input name="email" type="text" placeholder="Email*" required="required" class="form-control bg-white">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <label>Services you needed</label>
-                                <select class="form-control bg-white" id="exampleFormControlSelect1" name="services">
-                                    <option value="website-designing" selected="selected">Website Designing</option>
-                                    <option value="website-development">Website Development</option>
-                                    <option value="web-programming">Web Programming</option>
-                                    <option value="ecommerce-development">Ecommerce Development</option>
-                                    <option value="mobile-application-development">Mobile Application Development</option>
-                                    <option value="game-development">Game Development</option>
-                                    <option value="cms-extensions-development">CMS Extensions Development</option>
-                                    <option value="payment-getway-solutions">Payment Getway Solutions</option>
-                                    <option value="banner-production">Banner Production</option>
-                                    <option value="image-production">Image Production</option>
-                                    <option value="page-production">Page Production</option>
-                                    <option value="search-engine-optimization">Search Engine Optimization</option>
-
-                                </select>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label>Services you needed</label>
+                                    <select class="form-control bg-white" name="services">
+                                        <option value="website-designing" selected="selected">Website Designing</option>
+                                        <option value="website-development">Website Development</option>
+                                        <option value="web-programming">Web Programming</option>
+                                        <option value="ecommerce-development">Ecommerce Development</option>
+                                        <option value="mobile-application-development">Mobile Application Development</option>
+                                        <option value="search-engine-optimization">Search Engine Optimization</option>
+                                        <option value="other">Other Services</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6">
-                            <div class="form-group">
-                                <label></label>
-                                <input name="website" type="text" placeholder="If you have existing website URL" class="form-control bg-white">
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label></label>
+                                    <input name="website" type="text" placeholder="If you have existing website URL" class="form-control bg-white">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-12 col-md-12">
-                            <div class="form-group">
-                                <textarea name="massage" rows="5" placeholder="Write A Massage..." required="required" class="form-control bg-white"></textarea>
+                            <div class="col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <textarea name="message" rows="5" placeholder="Write A Message..." required="required" class="form-control bg-white"></textarea>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="text-left">
-                                <button type="submit" id="submit" class="ttm-btn ttm-btn-size-md ttm-btn-bgcolor-skincolor" value="">
-                                    Submit Quote
-                                </button>
+                            <div class="col-md-12">
+                                <div class="text-left">
+                                    <button type="submit" id="submit" class="ttm-btn ttm-btn-size-md ttm-btn-bgcolor-skincolor">
+                                        Submit Quote
+                                    </button>
+                                </div>
                             </div>
-                        </div>
                         </form>
-                        <!-- </form> -->
                     </div>
                 </div>
             </div>
             <!-- row end -->
-            <!-- row -->
-            <div class="row">
-
-            </div><!-- row end-->
         </div>
     </section>
     <!-- services-slide-section end -->
@@ -272,11 +181,21 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <!--map-start-->
                     <div class="map-wrapper">
-                       <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1qlJ4DqNZifeFGX3ATAjxH9A35Nu9qLxA" width="640" height="480"></iframe>
+                        @if(isset($contactInfos) && $contactInfos->isNotEmpty())
+                            @php
+                                $corporateInfo = $contactInfos->where('is_corporate', 1)->where('map_embed', '!=', null)->first();
+                                $mapInfo = $corporateInfo ?? $contactInfos->where('map_embed', '!=', null)->first();
+                            @endphp
+                            @if($mapInfo)
+                                {!! $mapInfo->map_embed !!}
+                            @else
+                                <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1qlJ4DqNZifeFGX3ATAjxH9A35Nu9qLxA" width="100%" height="480"></iframe>
+                            @endif
+                        @else
+                            <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1qlJ4DqNZifeFGX3ATAjxH9A35Nu9qLxA" width="100%" height="480"></iframe>
+                        @endif
                     </div>
-                    <!--map-end-->
                 </div>
             </div>
         </div>
@@ -284,18 +203,5 @@
     <!-- map-section end -->
 
 </div>
-<!--site-main end-->
 
-<!--back-to-top start-->
-<a id="totop" href="#top">
-    <i class="fa fa-angle-up"></i>
-</a>
-<!--back-to-top end-->
-
-</div><!-- page end -->
-
-
-        </div><!--site-main end-->
-        <div style="clear: both;"></div>
-        <!--footer start-->
 @endsection

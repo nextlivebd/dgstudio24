@@ -87,15 +87,34 @@
         </a>
 
         <a href="{{ route('admin.categories.index') }}" class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
-            <i class="fas fa-tags"></i> Categories
+            <i class="fas fa-tags"></i> Blog Categories
+        </a>
+
+        <a href="{{ route('admin.service-categories.index') }}" class="{{ request()->routeIs('admin.service-categories.*') ? 'active' : '' }}">
+            <i class="fas fa-sitemap"></i> Service Categories
+        </a>
+
+        <a href="{{ route('admin.services.index') }}" class="{{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
+            <i class="fas fa-concierge-bell"></i> Services
+        </a>
+
+        <a href="{{ route('admin.portfolios.index') }}" class="{{ request()->routeIs('admin.portfolios.*') ? 'active' : '' }}">
+            <i class="fas fa-briefcase"></i> Portfolios
+        </a>
+
+        <a href="{{ route('admin.portfolio-categories.index') }}" class="{{ request()->routeIs('admin.portfolio-categories.*') ? 'active' : '' }}">
+            <i class="fas fa-project-diagram"></i> Portfolio Categories
         </a>
 
         <a href="{{ route('admin.pages.index') }}" class="{{ request()->routeIs('admin.pages.*') ? 'active' : '' }}">
             <i class="fas fa-file-alt"></i> Pages
         </a>
         
-        <a href="{{ route('admin.contacts.index') }}" class="{{ request()->routeIs('admin.contacts.*') ? 'active' : '' }}">
-            <i class="fas fa-envelope"></i> Inquiries
+        <a href="{{ route('admin.contacts.index') }}" class="{{ request()->routeIs('admin.contacts.*') ? 'active' : '' }} d-flex justify-content-between align-items-center pr-3">
+            <div><i class="fas fa-envelope"></i> Inquiries</div>
+            @if(isset($unreadContactsCount) && $unreadContactsCount > 0)
+                <span class="badge bg-danger rounded-pill">{{ $unreadContactsCount }}</span>
+            @endif
         </a>
 
         <a href="{{ route('admin.contact-informations.index') }}" class="{{ request()->routeIs('admin.contact-informations.*') ? 'active' : '' }}">

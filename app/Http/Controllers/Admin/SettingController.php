@@ -22,10 +22,14 @@ class SettingController extends Controller
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'favicon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,ico,webp|max:1024',
             'og_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'service_banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'portfolio_banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'blog_banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'page_banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         // Process Dynamic JSON Data
-        $social_links = $this->formatJsonData($request->social_icon, $request->social_text);
+        $social_links = $this->formatJsonData($request->social_icon, $request->social_text, true);
         $main_phones = $this->formatJsonData($request->phone_icon, $request->phone_text);
         $main_emails = $this->formatJsonData($request->email_icon, $request->email_text);
 
@@ -38,7 +42,8 @@ class SettingController extends Controller
             '_token', 'logo', 'favicon', 'og_image', 
             'social_icon', 'social_text', 
             'phone_icon', 'phone_text', 
-            'email_icon', 'email_text'
+            'email_icon', 'email_text',
+            'service_banner_image', 'portfolio_banner_image', 'blog_banner_image', 'page_banner_image'
         ]);
 
         foreach ($settings as $key => $value) {
@@ -49,19 +54,44 @@ class SettingController extends Controller
         $this->handleUpload($request, 'logo');
         $this->handleUpload($request, 'favicon');
         $this->handleUpload($request, 'og_image');
+        $this->handleUpload($request, 'service_banner_image');
+        $this->handleUpload($request, 'portfolio_banner_image');
+        $this->handleUpload($request, 'blog_banner_image');
+        $this->handleUpload($request, 'page_banner_image');
 
         return redirect()->back()->with('success', 'Site settings updated successfully!');
     }
 
-    private function formatJsonData($icons, $texts)
+    private function formatJsonData($icons, $texts, $isSocial = false)
     {
         $data = [];
         if (is_array($texts)) {
             foreach ($texts as $key => $text) {
                 if (!empty($text)) {
+                    $iconClass = $icons[$key] ?? '';
+                    $name = '';
+                    
+                    if ($isSocial && !empty($iconClass)) {
+                        if (strpos($iconClass, 'facebook') !== false) $name = 'Facebook';
+                        elseif (strpos($iconClass, 'twitter') !== false) $name = 'Twitter';
+                        elseif (strpos($iconClass, 'linkedin') !== false) $name = 'LinkedIn';
+                        elseif (strpos($iconClass, 'youtube') !== false) $name = 'YouTube';
+                        elseif (strpos($iconClass, 'instagram') !== false) $name = 'Instagram';
+                        elseif (strpos($iconClass, 'whatsapp') !== false) $name = 'WhatsApp';
+                        elseif (strpos($iconClass, 'pinterest') !== false) $name = 'Pinterest';
+                        elseif (strpos($iconClass, 'tiktok') !== false) $name = 'TikTok';
+                        elseif (strpos($iconClass, 'skype') !== false) $name = 'Skype';
+                        elseif (strpos($iconClass, 'telegram') !== false) $name = 'Telegram';
+                        else {
+                            $parts = explode('-', $iconClass);
+                            $name = isset($parts[1]) ? ucfirst($parts[1]) : 'Social';
+                        }
+                    }
+
                     $data[] = [
-                        'icon' => $icons[$key] ?? '',
-                        'text' => $text
+                        'icon' => $iconClass,
+                        'text' => $text,
+                        'name' => $name
                     ];
                 }
             }

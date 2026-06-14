@@ -51,6 +51,11 @@
                                     <label class="form-label">Meta Description (SEO)</label>
                                     <textarea name="meta_description" class="form-control" rows="3">{{ get_setting('meta_description', 'Global Graphic Giant – A Complete IT Solution') }}</textarea>
                                 </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Company Short Description (For Footer/About)</label>
+                                    <textarea name="company_short_description" class="form-control" rows="4">{{ get_setting('company_short_description', 'Global Graphic Giant is one of the fastest growing and forward thinking ITES solution companies in Bangladesh, delivering outstanding software outsourcing services to clients in EU (Germany, France, Italy, UK, Spain), North America and Japan since 2006.') }}</textarea>
+                                </div>
                             </div>
                         </div>
 
@@ -81,6 +86,41 @@
                                         <img src="{{ asset(get_setting('og_image')) }}" alt="OG Image" class="img-thumbnail mb-2" style="max-height: 100px;">
                                     @endif
                                     <input type="file" name="og_image" class="form-control" accept="image/*">
+                                </div>
+                            </div>
+                        </div> <!-- Closes Media & Branding Card -->
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Section Banners</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label d-block">Service Details Banner</label>
+                                    @if(get_setting('service_banner_image'))
+                                        <img src="{{ asset(get_setting('service_banner_image')) }}" alt="Service Banner" class="img-thumbnail mb-2" style="max-height: 100px;">
+                                    @endif
+                                    <input type="file" name="service_banner_image" class="form-control" accept="image/*">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label d-block">Portfolio Banner</label>
+                                    @if(get_setting('portfolio_banner_image'))
+                                        <img src="{{ asset(get_setting('portfolio_banner_image')) }}" alt="Portfolio Banner" class="img-thumbnail mb-2" style="max-height: 100px;">
+                                    @endif
+                                    <input type="file" name="portfolio_banner_image" class="form-control" accept="image/*">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label d-block">Blog Banner</label>
+                                    @if(get_setting('blog_banner_image'))
+                                        <img src="{{ asset(get_setting('blog_banner_image')) }}" alt="Blog Banner" class="img-thumbnail mb-2" style="max-height: 100px;">
+                                    @endif
+                                    <input type="file" name="blog_banner_image" class="form-control" accept="image/*">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label d-block">Other Pages Banner</label>
+                                    @if(get_setting('page_banner_image'))
+                                        <img src="{{ asset(get_setting('page_banner_image')) }}" alt="Page Banner" class="img-thumbnail mb-2" style="max-height: 100px;">
+                                    @endif
+                                    <input type="file" name="page_banner_image" class="form-control" accept="image/*">
                                 </div>
                             </div>
                         </div>
