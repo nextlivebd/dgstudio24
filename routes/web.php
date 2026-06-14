@@ -9,17 +9,17 @@ Route::post('/contact-us', [\App\Http\Controllers\Frontend\ContactController::cl
 
 Route::get('/server-setup-run', function () {
     try {
+        // Run migrations first so tables exist
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        $output = "Migrations run successfully.<br>";
+
         // Clear all caches
         \Illuminate\Support\Facades\Artisan::call('optimize:clear');
-        $output = "Caches cleared successfully.<br>";
+        $output .= "Caches cleared successfully.<br>";
 
         // Create storage link
         \Illuminate\Support\Facades\Artisan::call('storage:link');
         $output .= "Storage link created successfully.<br>";
-
-        // Run migrations
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        $output .= "Migrations run successfully.<br>";
 
         // Run seeders
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
