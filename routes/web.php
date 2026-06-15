@@ -65,6 +65,18 @@ Route::get('/test-users', function () {
     }
 });
 
+// Session Test Routes
+Route::get('/set-session', function () {
+    $random = \Illuminate\Support\Str::random(10);
+    session(['test_session_key' => $random]);
+    return "Session key set to: " . $random . "<br><a href='/get-session'>Click here to check if it saved</a>";
+});
+
+Route::get('/get-session', function () {
+    $value = session('test_session_key', 'NOT_FOUND_OR_FAILED');
+    return "Session key is: " . $value . "<br>If it says 'NOT_FOUND_OR_FAILED', your server's session storage is not working!";
+});
+
 // Dynamic Service Route (Must be at the very bottom)
 Route::get('/{slug}', [FrontendController::class, 'serviceDetails'])
     ->where('slug', '^(?!(admin|login|logout|forgot-password|reset-password|up)$)[^/]+$')
