@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 page-header-flex">
         <h2 class="h3 mb-0 text-gray-800">Inbox</h2>
     </div>
 
@@ -53,16 +53,18 @@
                                 <div class="text-muted small" style="{{ !$contact->is_read ? 'font-weight: 600;' : 'font-weight: normal;' }}">{{ $contact->created_at->format('M d, Y') }}</div>
                             </td>
                             <td class="text-end pe-4">
-                                <a href="{{ route('admin.contacts.show', $contact->id) }}" class="btn btn-sm btn-outline-primary shadow-sm" title="View Message">
-                                    <i class="fas fa-eye"></i> View
-                                </a>
-                                <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm" onclick="return confirm('Are you sure you want to delete this message?')" title="Delete Message">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
+                                <div class="table-actions justify-content-end">
+                                    <a href="{{ route('admin.contacts.show', $contact->id) }}" class="btn btn-sm btn-outline-primary shadow-sm" title="View Message">
+                                        <i class="fas fa-eye"></i> <span class="btn-label">View</span>
+                                    </a>
+                                    <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm" onclick="return confirm('Are you sure you want to delete this message?')" title="Delete Message">
+                                            <i class="fas fa-trash"></i> <span class="btn-label">Delete</span>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                         @empty

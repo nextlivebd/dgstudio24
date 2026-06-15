@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 page-header-flex">
         <h2 class="h3 mb-0 text-gray-800">Services</h2>
         <a href="{{ route('admin.services.create') }}" class="btn btn-primary">
             <i class="fas fa-plus"></i> Add New Service
@@ -46,16 +46,18 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.services.edit', $service->id) }}" class="btn btn-sm btn-info text-white">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                    <form action="{{ route('admin.services.destroy', $service->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this service?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
-                                    </form>
+                                    <div class="table-actions">
+                                        <a href="{{ route('admin.services.edit', $service->id) }}" class="btn btn-sm btn-info text-white" title="Edit">
+                                            <i class="fas fa-edit"></i> <span class="btn-label">Edit</span>
+                                        </a>
+                                        <form action="{{ route('admin.services.destroy', $service->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this service?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                                <i class="fas fa-trash"></i> <span class="btn-label">Delete</span>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty

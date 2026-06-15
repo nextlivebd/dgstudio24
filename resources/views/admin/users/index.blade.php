@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 page-header-flex">
         <h2 class="h3 mb-0 text-gray-800 fw-bold">Users Management</h2>
         <a href="{{ route('admin.users.create') }}" class="btn btn-primary shadow-sm">
             <i class="fas fa-plus fa-sm text-white-50 me-1"></i> Add New User
@@ -51,18 +51,20 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->created_at->format('M d, Y') }}</td>
                             <td class="text-end pe-4">
-                                <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-outline-info rounded-pill px-3">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                @if(auth()->id() !== $user->id)
-                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                </form>
-                                @endif
+                                <div class="table-actions justify-content-end">
+                                    <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-outline-info rounded-pill px-3" title="Edit">
+                                        <i class="fas fa-edit"></i> <span class="btn-label">Edit</span>
+                                    </a>
+                                    @if(auth()->id() !== $user->id)
+                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3" title="Delete">
+                                            <i class="fas fa-trash"></i> <span class="btn-label">Delete</span>
+                                        </button>
+                                    </form>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                         @empty

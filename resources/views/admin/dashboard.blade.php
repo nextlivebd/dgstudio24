@@ -39,6 +39,23 @@
         border-radius: 15px 15px 0 0;
         padding: 20px;
     }
+    @media (max-width: 575.98px) {
+        .premium-card .card-body {
+            padding: 15px 10px !important;
+        }
+        .premium-card .text-uppercase {
+            font-size: 0.7rem !important;
+            letter-spacing: 0.5px !important;
+        }
+        .premium-card .h2 {
+            font-size: 1.4rem !important;
+        }
+        .premium-card .card-icon-bg {
+            font-size: 3rem !important;
+            right: -5px;
+            top: -5px;
+        }
+    }
 </style>
 @endpush
 
@@ -46,7 +63,7 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="h3 mb-0 text-gray-800 fw-bold">Dashboard Overview</h2>
-        <div class="text-muted small">
+        <div class="text-muted small d-none d-sm-block">
             <i class="fas fa-calendar-alt me-1"></i> {{ date('l, F j, Y') }}
         </div>
     </div>
@@ -54,11 +71,11 @@
     <!-- Traffic & Content Row -->
     <div class="row">
         <!-- Daily Traffic -->
-        <div class="col-xl-4 col-md-6 mb-4">
+        <div class="col-6 col-md-6 col-xl-4 mb-4">
             <div class="card premium-card bg-gradient-info text-white h-100">
                 <div class="card-body position-relative">
                     <div class="text-uppercase mb-1 fw-bold text-white-50" style="letter-spacing: 1px; font-size: 0.8rem;">
-                        Daily Unique Visitors
+                        Daily Visitors
                     </div>
                     <div class="h2 mb-0 fw-bold">{{ number_format($dailyTraffic) }}</div>
                     <i class="fas fa-chart-line card-icon-bg"></i>
@@ -67,11 +84,11 @@
         </div>
 
         <!-- Total Traffic -->
-        <div class="col-xl-4 col-md-6 mb-4">
+        <div class="col-6 col-md-6 col-xl-4 mb-4">
             <div class="card premium-card bg-gradient-primary text-white h-100">
                 <div class="card-body position-relative">
                     <div class="text-uppercase mb-1 fw-bold text-white-50" style="letter-spacing: 1px; font-size: 0.8rem;">
-                        Total Unique Visitors
+                        Total Visitors
                     </div>
                     <div class="h2 mb-0 fw-bold">{{ number_format($totalTraffic) }}</div>
                     <i class="fas fa-users card-icon-bg"></i>
@@ -80,7 +97,7 @@
         </div>
 
         <!-- Total Blogs -->
-        <div class="col-xl-4 col-md-6 mb-4">
+        <div class="col-6 col-md-6 col-xl-4 mb-4">
             <div class="card premium-card bg-gradient-warning text-white h-100">
                 <div class="card-body position-relative">
                     <div class="text-uppercase mb-1 fw-bold text-white-50" style="letter-spacing: 1px; font-size: 0.8rem;">
@@ -96,7 +113,7 @@
     <!-- General Stats Row -->
     <div class="row">
         <!-- Total Pages -->
-        <div class="col-xl-4 col-md-6 mb-4">
+        <div class="col-6 col-md-6 col-xl-4 mb-4">
             <div class="card premium-card bg-gradient-dark text-white h-100">
                 <div class="card-body position-relative">
                     <div class="text-uppercase mb-1 fw-bold text-white-50" style="letter-spacing: 1px; font-size: 0.8rem;">
@@ -109,7 +126,7 @@
         </div>
 
         <!-- Total Inquiries -->
-        <div class="col-xl-4 col-md-6 mb-4">
+        <div class="col-6 col-md-6 col-xl-4 mb-4">
             <div class="card premium-card bg-gradient-success text-white h-100">
                 <div class="card-body position-relative">
                     <div class="text-uppercase mb-1 fw-bold text-white-50" style="letter-spacing: 1px; font-size: 0.8rem;">
@@ -122,7 +139,7 @@
         </div>
         
         <!-- Site Status -->
-        <div class="col-xl-4 col-md-6 mb-4">
+        <div class="col-6 col-md-6 col-xl-4 mb-4">
             <div class="card premium-card bg-gradient-danger text-white h-100">
                 <div class="card-body position-relative">
                     <div class="text-uppercase mb-1 fw-bold text-white-50" style="letter-spacing: 1px; font-size: 0.8rem;">

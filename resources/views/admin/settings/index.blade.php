@@ -4,6 +4,41 @@
 <style>
     .dynamic-row { border: 1px dashed #dee2e6; padding: 15px; border-radius: 5px; margin-bottom: 15px; position: relative; background: #f8f9fa; }
     .remove-btn { position: absolute; top: 15px; right: 15px; }
+    .icon-preview-box {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        background-color: #fff;
+        border-radius: 6px;
+    }
+    
+    @media (max-width: 767.98px) {
+        .dynamic-row {
+            padding: 10px;
+        }
+        .dynamic-row .row > [class*="col-md-"] {
+            flex: 0 0 100%;
+            max-width: 100%;
+            margin-bottom: 10px;
+        }
+        .dynamic-row .remove-btn {
+            position: relative;
+            top: auto;
+            right: auto;
+            margin-bottom: 10px;
+            display: block;
+            width: fit-content;
+            margin-left: auto;
+        }
+        .icon-preview-box {
+            width: 35px;
+            height: 35px;
+            font-size: 14px;
+        }
+    }
 </style>
 @endpush
 
