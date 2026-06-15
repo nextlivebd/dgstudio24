@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             SectionSettingsSeeder::class,
             SliderSeeder::class,
             ShehalaServiceSeeder::class,
+            ShehalaPortfolioSeeder::class,
         ]);
     }
 }
