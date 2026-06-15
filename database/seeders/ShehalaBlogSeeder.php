@@ -11,14 +11,11 @@ class ShehalaBlogSeeder extends Seeder
 {
     public function run()
     {
-        // Smart Check: Prevent duplicate entries
-        if (Blog::count() > 0) {
-            $this->command->info('Blogs are already seeded. Skipping ShehalaBlogSeeder...');
-            return;
-        }
+        // Smart Check: we won't skip completely so we can fix missing images
+        // if (Blog::count() > 0) { ... } removed
 
-        // Create upload directory if it doesn't exist
-        $uploadPath = public_path('uploads/blogs');
+        // Create upload directory if it doesn't exist in the storage disk
+        $uploadPath = storage_path('app/public/uploads/blogs');
         if (!File::exists($uploadPath)) {
             File::makeDirectory($uploadPath, 0755, true);
         }
@@ -54,35 +51,39 @@ class ShehalaBlogSeeder extends Seeder
             if (empty($ext) || strlen($ext) > 4) $ext = 'jpg';
             $imgName = $slug . '-' . md5($item['image']) . '.' . $ext;
             $imagePath = 'uploads/blogs/' . $imgName;
+            $fullStoragePath = storage_path('app/public/' . $imagePath);
 
             // Check if post already exists
-            if (!Blog::where('slug', $slug)->exists()) {
-                
+            $blog = Blog::where('slug', $slug)->first();
+            
+            // If the image doesn't exist in the correct storage folder, download it!
+            if (!File::exists($fullStoragePath)) {
                 $this->command->line("  Downloading image for Blog: {$item['title']}");
-                
                 try {
                     $imgContents = @file_get_contents($item['image']);
                     if ($imgContents) {
-                        File::put(public_path($imagePath), $imgContents);
-                        
-                        // Create Blog post
-                        Blog::firstOrCreate(
-                            ['slug' => $slug],
-                            [
-                                'title' => $item['title'],
-                                'content' => $item['description'],
-                                'thumbnail' => $imagePath,
-                                'status' => 'published',
-                                'published_at' => now(),
-                                'meta_title' => $item['title'],
-                            ]
-                        );
+                        File::put($fullStoragePath, $imgContents);
                     }
                 } catch (\Exception $e) {
                     $this->command->warn("    Failed to download image: {$item['image']}");
                 }
-                
                 usleep(500000); 
+            }
+
+            // Create or update the blog post
+            if (!$blog) {
+                Blog::create([
+                    'slug' => $slug,
+                    'title' => $item['title'],
+                    'content' => $item['description'],
+                    'thumbnail' => $imagePath,
+                    'status' => 'published',
+                    'published_at' => now(),
+                    'meta_title' => $item['title'],
+                ]);
+            } else {
+                // Ensure thumbnail path is correct in the database
+                $blog->update(['thumbnail' => $imagePath]);
             }
         }
 
