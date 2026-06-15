@@ -27,7 +27,7 @@
                             </div><!-- /.page-title-captions -->
                             <div class="breadcrumb-wrapper">
                                 <span>
-                                    <a title="Homepage" href="https://shehala.com"><i class="ti ti-home"></i>&nbsp;&nbsp;Home</a>
+                                    <a title="Homepage" href="{{ url('/') }}"><i class="ti ti-home"></i>&nbsp;&nbsp;Home</a>
                                 </span>
                                 <span class="ttm-bread-sep">&nbsp; : : &nbsp;</span>
                                 

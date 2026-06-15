@@ -31,7 +31,7 @@
                                         <!-- /.page-title-captions -->
                                         <div class="breadcrumb-wrapper">
                                             <span>
-                                    <a title="Homepage" href="https://www.shehala.com"><i class="ti ti-home"></i>&nbsp;&nbsp;Home</a>
+                                    <a title="Homepage" href="{{ url('/') }}"><i class="ti ti-home"></i>&nbsp;&nbsp;Home</a>
                                 </span>
                                             <span class="ttm-bread-sep">&nbsp; : : &nbsp;</span>
                                             <span>About Us</span>
@@ -74,7 +74,7 @@
                                 <!-- row -->
 
                                 <p class="mb-0"><b>Shehala IT grew from four persons company to a 100 persons company with in 19 years by repeatedly delivering client satisfaction.</b></p>
-                                <a href="https://www.shehala.com/portfolio" class="ttm-btn ttm-btn-bgcolor-skincolor ttm-btn-size-md mt-35">PORTFOLIO</a>
+                                <a href="{{ url('/portfolio') }}" class="ttm-btn ttm-btn-bgcolor-skincolor ttm-btn-size-md mt-35">PORTFOLIO</a>
                             </div>
 
                         </div>

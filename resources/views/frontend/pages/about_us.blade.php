@@ -48,7 +48,7 @@
                 <!-- row -->
             
                 <p class="mb-0"><b>Shehala IT grew from four persons company to a 100 persons company with in 19 years by repeatedly delivering client satisfaction.</b></p>
-                <a href="https://www.shehala.com/portfolio" class="ttm-btn ttm-btn-bgcolor-skincolor ttm-btn-size-md mt-35">PORTFOLIO</a>
+                <a href="{{ url('/portfolio') }}" class="ttm-btn ttm-btn-bgcolor-skincolor ttm-btn-size-md mt-35">PORTFOLIO</a>
             </div>
            
         </div>
