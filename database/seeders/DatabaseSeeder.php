@@ -16,11 +16,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('password'),
+        // Smart create user (prevents 1062 duplicate error)
+        User::firstOrCreate(
+            ['email' => 'admin@admin.com'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // Run other seeders automatically
+        $this->call([
+            SectionSettingsSeeder::class,
+            SliderSeeder::class,
+            ShehalaServiceSeeder::class,
         ]);
     }
 }
-// সচদসচ 

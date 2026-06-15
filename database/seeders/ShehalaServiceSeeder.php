@@ -14,11 +14,11 @@ class ShehalaServiceSeeder extends Seeder
 {
     public function run()
     {
-        // Clear existing data
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        Service::truncate();
-        ServiceCategory::truncate();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        // Smart Check: If services already exist, skip to save time and prevent duplicate scraping
+        if (ServiceCategory::count() > 0 || Service::count() > 0) {
+            $this->command->info('Services and Categories are already seeded. Skipping ShehalaServiceSeeder...');
+            return;
+        }
 
         // Create upload directory if it doesn't exist
         $uploadPath = public_path('uploads/services');
