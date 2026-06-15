@@ -90,9 +90,10 @@ class FrontendController extends Controller
             return view('frontend.pages.dynamic', compact('page'));
         }
         
-        // Fallback to static blade file if DB entry doesn't exist
-        if (view()->exists("frontend.pages.{$slug}")) {
-            return view("frontend.pages.{$slug}");
+        // Fallback to static blade file if DB entry doesn't exist (map hyphens to underscores for file check)
+        $viewName = str_replace('-', '_', $slug);
+        if (view()->exists("frontend.pages.{$viewName}")) {
+            return view("frontend.pages.{$viewName}");
         }
 
         abort(404);

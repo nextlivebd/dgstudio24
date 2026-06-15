@@ -32,7 +32,6 @@ Route::get('/server-setup-run', function () {
 });
 
 // Pages
-Route::view('/about-us', 'frontend.pages.about_us')->name('about_us');
 Route::get('/portfolio', [FrontendController::class, 'portfolio'])->name('portfolio');
 Route::get('/portfolio-details/{id}/{slug?}', [FrontendController::class, 'portfolioDetails'])->name('portfolio.details');
 Route::get('/blog', [FrontendController::class, 'blog'])->name('blog');

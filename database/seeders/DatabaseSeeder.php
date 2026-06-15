@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             ShehalaServiceSeeder::class,
             ShehalaPortfolioSeeder::class,
             ShehalaBlogSeeder::class,
+            PageSeeder::class,
         ]);
     }
 }

@@ -185,7 +185,9 @@
                                     <nav id="menu" class="menu">
                                         <ul class="dropdown">
                                             <li class="{{ request()->is('/') ? 'active' : '' }}"><a href="{{ url('/') }}">Home</a> </li>
-                                            <li class="{{ request()->is('about-us') ? 'active' : '' }}"><a href="{{ url('about-us') }}">About Us</a></li>
+                                            @if(isset($globalPageSlugs) && in_array('about-us', $globalPageSlugs))
+                                                <li class="{{ request()->is('about-us') ? 'active' : '' }}"><a href="{{ url('about-us') }}">About Us</a></li>
+                                            @endif
                                             
                                             <li class="{{ request()->is('service/*') ? 'active' : '' }}"><a href="#">Services</a>
                                                 @if(isset($globalServiceCategories) && $globalServiceCategories->isNotEmpty())
@@ -332,8 +334,10 @@
                                 <h3 class="widget-title">Quick Links</h3>
 
                                 <ul id="menu-footer-services">
-                                    <li><a href="{{ url('about-us') }}">Why Global Graphic Giant?</a></li>
-                                    <li><a href="{{ url('about-us') }}">About Us</a></li>
+                                    @if(isset($globalPageSlugs) && in_array('about-us', $globalPageSlugs))
+                                        <li><a href="{{ url('about-us') }}">Why Global Graphic Giant?</a></li>
+                                        <li><a href="{{ url('about-us') }}">About Us</a></li>
+                                    @endif
                                     <li><a href="{{ url('portfolio') }}">Portfolio</a></li>
                                     <li><a href="{{ url('contact-us') }}">Contact Us</a></li>
                                 </ul>
@@ -405,9 +409,16 @@
                             <div class="text-md-right res-767-mt-10">
                                 <div class="d-lg-inline-flex">
                                     <ul id="menu-footer-menu" class="footer-nav-menu">
-                                        <li><a href="{{ url('about-us') }}">About Us</a></li>
+                                        @if(isset($globalPageSlugs) && in_array('about-us', $globalPageSlugs))
+                                            <li><a href="{{ url('about-us') }}">About Us</a></li>
+                                        @endif
                                         <li><a href="{{ url('contact-us') }}">Contact Us</a></li>
-                                        <li><a href="{{ url('contact-us') }}">Privacy</a></li>
+                                        @if(isset($globalPageSlugs) && in_array('privacy-policy', $globalPageSlugs))
+                                            <li><a href="{{ url('privacy-policy') }}">Privacy Policy</a></li>
+                                        @endif
+                                        @if(isset($globalPageSlugs) && in_array('terms-and-conditions', $globalPageSlugs))
+                                            <li><a href="{{ url('terms-and-conditions') }}">Terms & Conditions</a></li>
+                                        @endif
                                     </ul>
                                     <div class="float-md-right ml-20 res-767-ml-0">
                                         <img src="{{ asset('frontend/images/footer-payment-img.png') }}" alt="payment-img">

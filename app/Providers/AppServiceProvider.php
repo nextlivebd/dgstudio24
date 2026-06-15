@@ -33,11 +33,15 @@ class AppServiceProvider extends ServiceProvider
             
             $globalCorporateOffice = \App\Models\ContactInformation::where('is_corporate', true)->first();
             $globalContactInfos = \App\Models\ContactInformation::where('is_active', true)->get();
+            
+            // Fetch slugs of all active/created pages to determine nav/footer links visibility
+            $globalPageSlugs = \App\Models\Page::pluck('slug')->toArray();
 
             $view->with([
                 'globalServiceCategories' => $categories,
                 'globalCorporateOffice' => $globalCorporateOffice,
-                'globalContactInfos' => $globalContactInfos
+                'globalContactInfos' => $globalContactInfos,
+                'globalPageSlugs' => $globalPageSlugs
             ]);
         });
 
