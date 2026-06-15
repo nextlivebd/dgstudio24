@@ -48,6 +48,23 @@ Route::view('/development-life-cycle', 'frontend.pages.development_life_cycle')-
 Route::view('/offshore-development-centre', 'frontend.pages.offshore_development_centre')->name('offshore_development_centre');
 Route::view('/technology-expertise', 'frontend.pages.technology_expertise')->name('technology_expertise');
 
+// Test Database Route
+Route::get('/test-users', function () {
+    try {
+        $users = \App\Models\User::all();
+        return response()->json([
+            'status' => 'success',
+            'count' => $users->count(),
+            'users' => $users
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage()
+        ]);
+    }
+});
+
 // Dynamic Service Route (Must be at the very bottom)
 Route::get('/{slug}', [FrontendController::class, 'serviceDetails'])
     ->where('slug', '^(?!(admin|login|logout|forgot-password|reset-password|up)$)[^/]+$')
