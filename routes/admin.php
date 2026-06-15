@@ -22,8 +22,11 @@ Route::middleware('admin')->group(function () {
     
     // Page Management CRUD
     Route::get('/pages', [PageController::class, 'index'])->name('pages.index');
+    Route::get('/pages/create', [PageController::class, 'create'])->name('pages.create');
+    Route::post('/pages', [PageController::class, 'store'])->name('pages.store');
     Route::get('/pages/{id}/edit', [PageController::class, 'edit'])->name('pages.edit');
     Route::put('/pages/{id}', [PageController::class, 'update'])->name('pages.update');
+    Route::delete('/pages/{id}', [PageController::class, 'destroy'])->name('pages.destroy');
     
     // Site Settings
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
