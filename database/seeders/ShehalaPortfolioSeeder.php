@@ -29,7 +29,7 @@ class ShehalaPortfolioSeeder extends Seeder
         $this->command->info("Fetching portfolio page...");
         
         try {
-            $response = Http::withOptions(['verify' => false])->get('https://www.shehala.com/portfolio');
+            $response = Http::withOptions(['verify' => false])->get('https://shehala.com/portfolio');
             $html = $response->body();
             
             libxml_use_internal_errors(true);
@@ -38,37 +38,50 @@ class ShehalaPortfolioSeeder extends Seeder
             libxml_clear_errors();
             $xpath = new \DOMXPath($dom);
 
-            // Let's scrape categories first if they have filters (like .portfolio-filter li a)
-            // But usually, they are just items. We can create a default category if none found.
-            $defaultCategory = PortfolioCategory::firstOrCreate([
-                'slug' => 'general'
-            ], [
-                'name' => 'General Portfolio',
-                'status' => 1
-            ]);
-
-            // Try to find portfolio items. Shehala IT uses ttm-box-view-overlay or similar classes.
-            // We look for any image inside a portfolio section, or just any link with an image inside a grid.
-            $portfolioNodes = $xpath->query('//div[contains(@class, "ttm-box-view-content-inner") or contains(@class, "portfolio")]//img');
-            
-            // If the specific class fails, fallback to images inside links in a grid.
-            if ($portfolioNodes->length === 0) {
-                $portfolioNodes = $xpath->query('//div[contains(@class, "row") or contains(@class, "grid")]//img');
+            // Fetch and create Categories
+            $categoryNodes = $xpath->query('//ul[contains(@class, "tabs")]/li/a');
+            $categoriesMap = [];
+            foreach ($categoryNodes as $node) {
+                $catName = trim($node->textContent);
+                if ($catName && strtolower($catName) !== 'all') {
+                    $cat = PortfolioCategory::firstOrCreate(
+                        ['slug' => Str::slug($catName)],
+                        ['name' => $catName, 'status' => 1]
+                    );
+                    $categoriesMap[strtolower($catName)] = $cat->id;
+                    $this->command->line("Found Category: " . $catName);
+                }
             }
 
+            // Fallback General Category
+            $defaultCat = PortfolioCategory::firstOrCreate(['slug' => 'general'], ['name' => 'General', 'status' => 1]);
+
+            // Fetch Portfolio Items
+            $portfolioNodes = $xpath->query('//div[contains(@class, "featured-imagebox-portfolio")]');
             $count = 0;
 
-            foreach ($portfolioNodes as $imgNode) {
-                $src = $imgNode->getAttribute('src');
-                $alt = $imgNode->getAttribute('alt') ?: 'Portfolio Item ' . ($count + 1);
-                
-                // If the src is valid and looks like a portfolio image
-                if (!empty($src) && !str_contains($src, 'logo')) {
-                    if (!str_starts_with($src, 'http')) {
-                        $src = 'https://www.shehala.com' . (str_starts_with($src, '/') ? '' : '/') . $src;
-                    }
+            foreach ($portfolioNodes as $itemNode) {
+                // Extract Image
+                $imgNode = $xpath->query('.//img', $itemNode)->item(0);
+                $titleNode = $xpath->query('.//div[contains(@class, "featured-title")]//a', $itemNode)->item(0);
+                $catNode = $xpath->query('.//div[contains(@class, "category")]//p', $itemNode)->item(0);
+
+                if ($imgNode && $titleNode) {
+                    $src = $imgNode->getAttribute('src');
+                    $title = trim($titleNode->textContent);
+                    $link = $titleNode->getAttribute('href');
+                    $catText = $catNode ? trim($catNode->textContent) : 'General';
                     
-                    $this->command->line("  Downloading image: $src");
+                    $categoryId = $categoriesMap[strtolower($catText)] ?? $defaultCat->id;
+
+                    // Fix Image URL (e.g. "../images/..." to "https://shehala.com/images/...")
+                    if (str_starts_with($src, '../')) {
+                        $src = 'https://shehala.com/' . substr($src, 3);
+                    } elseif (!str_starts_with($src, 'http')) {
+                        $src = 'https://shehala.com' . (str_starts_with($src, '/') ? '' : '/') . $src;
+                    }
+
+                    $this->command->line("  Downloading image for: $title");
                     
                     try {
                         $imgContents = @file_get_contents($src);
@@ -76,20 +89,22 @@ class ShehalaPortfolioSeeder extends Seeder
                             $ext = pathinfo(parse_url($src, PHP_URL_PATH), PATHINFO_EXTENSION);
                             if (empty($ext) || strlen($ext) > 4) $ext = 'jpg';
                             
-                            $slug = Str::slug($alt) ?: 'portfolio-' . uniqid();
+                            $slug = Str::slug($title) ?: 'portfolio-' . uniqid();
                             $imgName = $slug . '-' . time() . '.' . $ext;
                             
                             File::put(public_path('uploads/portfolios/' . $imgName), $imgContents);
                             $imagePath = 'uploads/portfolios/' . $imgName;
 
+                            // Insert into DB
                             Portfolio::firstOrCreate([
                                 'slug' => $slug,
                             ], [
-                                'portfolio_category_id' => $defaultCategory->id,
-                                'title' => $alt,
+                                'portfolio_category_id' => $categoryId,
+                                'title' => $title,
                                 'image' => $imagePath,
+                                'website_url' => $link,
                                 'status' => 1,
-                                'description' => '<p>Portfolio project for ' . $alt . '</p>'
+                                'description' => '<p>Portfolio project for ' . $title . '</p>'
                             ]);
                             
                             $count++;
@@ -98,46 +113,16 @@ class ShehalaPortfolioSeeder extends Seeder
                         $this->command->warn("    Failed to download image: $src");
                     }
                 }
-                
-                // Limit to 20 items to not overload the server
-                if ($count >= 20) {
-                    break;
-                }
             }
             
             if ($count == 0) {
-                $this->command->warn('No portfolio items found to scrape. Inserting dummy data.');
-                $this->insertDummyData($defaultCategory);
+                $this->command->warn('No portfolio items found. Make sure the structure matches.');
             } else {
                 $this->command->info("Successfully scraped and inserted $count portfolio items!");
             }
 
         } catch (\Exception $e) {
             $this->command->error("Error scraping portfolio: " . $e->getMessage());
-            // Fallback to dummy data
-            $defaultCategory = PortfolioCategory::firstOrCreate(['slug' => 'general'], ['name' => 'General', 'status' => 1]);
-            $this->insertDummyData($defaultCategory);
-        }
-    }
-
-    private function insertDummyData($category)
-    {
-        $dummyItems = [
-            'E-commerce Website Design',
-            'Corporate Business Portal',
-            'Restaurant Web Application',
-            'Real Estate Platform'
-        ];
-
-        foreach ($dummyItems as $item) {
-            Portfolio::firstOrCreate([
-                'slug' => Str::slug($item)
-            ], [
-                'portfolio_category_id' => $category->id,
-                'title' => $item,
-                'status' => 1,
-                'description' => '<p>This is a sample description for ' . $item . '.</p>'
-            ]);
         }
     }
 }
