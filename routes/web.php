@@ -324,62 +324,148 @@ Route::get('/setup-download-images', function () {
         ['type' => 'portfolio', 'url' => 'https://shehala.com/images/portfolio-images/rMFYrXw99HFuZwbj3eeN.jpg', 'path' => public_path('uploads/portfolios/newspaper-advertisement-' . md5('https://shehala.com/images/portfolio-images/rMFYrXw99HFuZwbj3eeN.jpg') . '.jpg')],
     ];
 
+    $progressFile = storage_path('app/setup_progress.json');
+
+    // Handle retry failed images request
+    if (request()->has('retry')) {
+        $progress = [];
+        if (file_exists($progressFile)) {
+            $progress = json_decode(file_get_contents($progressFile), true) ?? [];
+        }
+        unset($progress['failed_images']);
+        file_put_contents($progressFile, json_encode($progress, JSON_PRETTY_PRINT));
+        return redirect('/setup-download-images');
+    }
+
+    $progress = [];
+    if (file_exists($progressFile)) {
+        $progress = json_decode(file_get_contents($progressFile), true) ?? [];
+    }
+    $failedList = $progress['failed_images'] ?? [];
+
     $total = count($allImages);
     $done = 0;
-    $skipped = 0;
-    $pending = 0;
+    $failedCount = 0;
 
-    // Find the first image that hasn't been downloaded yet and download just that one
-    $downloaded = null;
+    // Count completed and failed images
     foreach ($allImages as $img) {
         if (file_exists($img['path'])) {
             $done++;
+        } elseif (isset($failedList[$img['url']])) {
+            $failedCount++;
+        }
+    }
+
+    // Find the first image that hasn't been downloaded or marked failed yet and download just that one
+    $downloaded = null;
+    foreach ($allImages as $img) {
+        if (file_exists($img['path']) || isset($failedList[$img['url']])) {
             continue;
         }
+
         if ($downloaded === null) {
             // Ensure directory exists
             $dir = dirname($img['path']);
             if (!is_dir($dir)) mkdir($dir, 0755, true);
 
             try {
-                $ctx = stream_context_create(['http' => ['timeout' => 15]]);
-                $contents = @file_get_contents($img['url'], false, $ctx);
-                if ($contents) {
-                    file_put_contents($img['path'], $contents);
+                // Method 1: Laravel's Http client with SSL verification bypassed and proper User-Agent
+                $response = \Illuminate\Support\Facades\Http::withoutVerifying()
+                    ->withUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+                    ->timeout(15)
+                    ->get($img['url']);
+
+                if ($response->successful()) {
+                    file_put_contents($img['path'], $response->body());
                     $downloaded = basename($img['path']) . " ({$img['type']})";
                     $done++;
                 } else {
-                    $downloaded = "❌ Failed: " . $img['url'];
-                    $pending++;
+                    // Method 2: Fallback to stream context with bypassed SSL and User-Agent
+                    $ctx = stream_context_create([
+                        'http' => [
+                            'timeout' => 15,
+                            'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\r\n"
+                        ],
+                        'ssl' => [
+                            'verify_peer' => false,
+                            'verify_peer_name' => false,
+                        ]
+                    ]);
+                    $contents = @file_get_contents($img['url'], false, $ctx);
+                    if ($contents) {
+                        file_put_contents($img['path'], $contents);
+                        $downloaded = basename($img['path']) . " ({$img['type']})";
+                        $done++;
+                    } else {
+                        $progress['failed_images'][$img['url']] = true;
+                        file_put_contents($progressFile, json_encode($progress, JSON_PRETTY_PRINT));
+                        $failedCount++;
+                        $downloaded = "❌ Failed: " . $img['url'] . " (Status: " . $response->status() . ")";
+                    }
                 }
             } catch (\Exception $e) {
-                $downloaded = "❌ Error: " . $e->getMessage();
-                $pending++;
+                // Method 2 fallback in case of Exception
+                try {
+                    $ctx = stream_context_create([
+                        'http' => [
+                            'timeout' => 15,
+                            'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\r\n"
+                        ],
+                        'ssl' => [
+                            'verify_peer' => false,
+                            'verify_peer_name' => false,
+                        ]
+                    ]);
+                    $contents = @file_get_contents($img['url'], false, $ctx);
+                    if ($contents) {
+                        file_put_contents($img['path'], $contents);
+                        $downloaded = basename($img['path']) . " ({$img['type']})";
+                        $done++;
+                    } else {
+                        $progress['failed_images'][$img['url']] = true;
+                        file_put_contents($progressFile, json_encode($progress, JSON_PRETTY_PRINT));
+                        $failedCount++;
+                        $downloaded = "❌ Failed: " . $img['url'] . " (" . $e->getMessage() . ")";
+                    }
+                } catch (\Exception $e2) {
+                    $progress['failed_images'][$img['url']] = true;
+                    file_put_contents($progressFile, json_encode($progress, JSON_PRETTY_PRINT));
+                    $failedCount++;
+                    $downloaded = "❌ Error: " . $e->getMessage() . " / " . $e2->getMessage();
+                }
             }
-        } else {
-            $pending++;
         }
     }
 
-    $remaining = $total - $done - ($downloaded && str_starts_with($downloaded, '❌') ? 0 : 0);
-    $remaining = $total - $done;
+    $remaining = $total - $done - $failedCount;
 
     $statusMsg = $downloaded
-        ? "<p class='ok'>⬇️ Downloaded: <b>{$downloaded}</b></p>"
+        ? "<p class='ok'>Status: <b>{$downloaded}</b></p>"
         : "<p class='ok'>🎉 সমস্ত ইমেজ ডাউনলোড সম্পন্ন!</p>";
 
-    $progress = "<p>মোট: <b>{$total}</b> | সম্পন্ন: <b>{$done}</b> | বাকি: <b>{$remaining}</b></p>";
-    $progressPct = $total > 0 ? round(($done / $total) * 100) : 100;
+    $progressMsg = "<p>মোট: <b>{$total}</b> | সফল: <b>{$done}</b>" . ($failedCount > 0 ? " | ব্যর্থ: <b style='color:#dc2626;'>{$failedCount}</b>" : "") . " | বাকি: <b>{$remaining}</b></p>";
+    $progressPct = $total > 0 ? round((($done + $failedCount) / $total) * 100) : 100;
     $bar = "<div style='background:#e5e7eb;border-radius:8px;height:20px;margin:12px 0;'>
         <div style='background:#16a34a;width:{$progressPct}%;height:100%;border-radius:8px;transition:width .3s;'></div>
     </div><p style='text-align:center;'>{$progressPct}%</p>";
 
+    if ($failedCount > 0) {
+        $bar .= "<p style='text-align:center;'><a href='/setup-download-images?retry=1' class='btn' style='background:#ea580c;color:#fff;'>🔄 ব্যর্থ ইমেজগুলো আবার চেষ্টা করুন (Retry Failed)</a></p>";
+    }
+
+    // Auto-refresh script (1 second if success, 2 seconds if failed)
+    $autoRedirect = "";
     if ($remaining > 0) {
-        return setupResponse('Image Download', $statusMsg . $progress . $bar,
+        $delay = (str_contains($downloaded ?? '', '❌') || str_contains($downloaded ?? '', 'Error')) ? 2000 : 1000;
+        $autoRedirect = "<script>setTimeout(function(){ window.location.href = '/setup-download-images'; }, {$delay});</script>";
+    }
+
+    if ($remaining > 0) {
+        return setupResponse('Image Download', $statusMsg . $progressMsg . $bar . $autoRedirect,
             '/setup-download-images', "পরবর্তী ইমেজ ({$remaining} বাকি)");
     }
 
-    return setupResponse('Image Download', $statusMsg . $progress . $bar . "<p>সব ইমেজ ডাউনলোড হয়েছে!</p>",
+    return setupResponse('Image Download', $statusMsg . $progressMsg . $bar . "<p>সব ইমেজ ডাউনলোড হয়েছে!</p>",
         '/server-setup-run', 'Dashboard এ ফিরুন');
 });
 
