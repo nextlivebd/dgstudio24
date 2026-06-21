@@ -119,102 +119,33 @@ class ShehalaServiceSeeder extends Seeder
 
         foreach ($categories as $catData) {
             $this->command->info("Processing Category: {$catData['name']}");
-            
-            $parent = ServiceCategory::create([
-                'name' => $catData['name'],
-                'slug' => Str::slug($catData['name']),
-                'icon' => $catData['icon'],
-                'description' => $catData['description'],
-                'status' => 1
-            ]);
+
+            $parent = ServiceCategory::firstOrCreate(
+                ['slug' => Str::slug($catData['name'])],
+                [
+                    'name'        => $catData['name'],
+                    'icon'        => $catData['icon'],
+                    'description' => $catData['description'],
+                    'status'      => 1
+                ]
+            );
 
             foreach ($catData['children'] as $childData) {
-                $this->command->line("  Scraping Service: {$childData['name']}");
-                
-                try {
-                    $response = Http::get($childData['url']);
-                    $html = $response->body();
-                    
-                    // Supress DOM warnings
-                    libxml_use_internal_errors(true);
-                    $dom = new \DOMDocument();
-                    $dom->loadHTML($html);
-                    libxml_clear_errors();
-                    $xpath = new \DOMXPath($dom);
-
-                    // Finding the main service image
-                    // Typically inside .ttm-service-single-content-area img
-                    $imageNodes = $xpath->query('//div[contains(@class, "ttm-service-single-content-area")]//img');
-                    $imagePath = null;
-                    if ($imageNodes->length > 0) {
-                        $src = $imageNodes->item(0)->getAttribute('src');
-                        if (!str_starts_with($src, 'http')) {
-                            $src = 'https://www.shehala.com' . (str_starts_with($src, '/') ? '' : '/') . $src;
-                        }
-                        
-                        // Download image
-                        try {
-                            $imgContents = file_get_contents($src);
-                            if ($imgContents) {
-                                $ext = pathinfo($src, PATHINFO_EXTENSION);
-                                if (empty($ext) || strlen($ext) > 4) $ext = 'jpg';
-                                $imgName = Str::slug($childData['name']) . '-' . time() . '.' . $ext;
-                                File::put(public_path('uploads/services/' . $imgName), $imgContents);
-                                $imagePath = 'uploads/services/' . $imgName;
-                            }
-                        } catch (\Exception $e) {
-                            $this->command->error("    Failed to download image: $src");
-                        }
-                    }
-
-                    // Finding the description
-                    // Extract content from .ttm-service-description div
-                    $descNodes = $xpath->query('//div[contains(@class, "ttm-service-description")]');
-                    $descriptionHtml = '';
-                    if ($descNodes->length > 0) {
-                        // Usually the second one contains the main text, or just combine them
-                        foreach ($descNodes as $node) {
-                            // Extract inner HTML
-                            $innerHTML = "";
-                            $children = $node->childNodes;
-                            foreach ($children as $child) {
-                                $innerHTML .= $node->ownerDocument->saveHTML($child);
-                            }
-                            $descriptionHtml .= $innerHTML . '<br>';
-                        }
-                    } else {
-                        // Fallback
-                        $descriptionHtml = '<p>Description not found for ' . $childData['name'] . '</p>';
-                    }
-
-                    // Clean up specific shehala classes if necessary or leave them
-                    // Creating the service
-                    Service::create([
+                // Create service instantly — no HTTP call, no scraping, no sleep
+                Service::firstOrCreate(
+                    ['slug' => Str::slug($childData['name'])],
+                    [
                         'service_category_id' => $parent->id,
-                        'title' => $childData['name'],
-                        'slug' => Str::slug($childData['name']),
-                        'thumbnail_image' => $imagePath,
-                        'description' => $descriptionHtml,
-                        'status' => 1
-                    ]);
-
-                } catch (\Exception $e) {
-                    $this->command->error("  Error scraping {$childData['name']}: " . $e->getMessage());
-                    // Create empty service if scraping fails
-                    Service::create([
-                        'service_category_id' => $parent->id,
-                        'title' => $childData['name'],
-                        'slug' => Str::slug($childData['name']),
-                        'description' => '<p>Error scraping content.</p>',
-                        'status' => 1
-                    ]);
-                }
-                
-                // Sleep slightly to not hammer the server
-                sleep(1);
+                        'title'               => $childData['name'],
+                        'thumbnail_image'     => null,
+                        'description'         => '<p>' . $childData['name'] . ' service by DG Studio 24. Content coming soon.</p>',
+                        'status'              => 1
+                    ]
+                );
+                $this->command->line("  ✅ Created: {$childData['name']}");
             }
         }
-        
-        $this->command->info('Shehala services scraping and seeding completed!');
+
+        $this->command->info('Services seeded successfully!');
     }
 }

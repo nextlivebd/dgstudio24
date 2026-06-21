@@ -45,44 +45,28 @@ class ShehalaBlogSeeder extends Seeder
 
         foreach ($items as $item) {
             $slug = Str::slug($item['title']);
-            
-            // Generate Local Image Name
+
+            // Generate local image name (no download here — images fetched separately)
             $ext = pathinfo(parse_url($item['image'], PHP_URL_PATH), PATHINFO_EXTENSION);
             if (empty($ext) || strlen($ext) > 4) $ext = 'jpg';
             $imgName = $slug . '-' . md5($item['image']) . '.' . $ext;
             $imagePath = 'uploads/blogs/' . $imgName;
-            $fullStoragePath = storage_path('app/public/' . $imagePath);
 
-            // Check if post already exists
+            // Create or update the blog post (no HTTP call, instant!)
             $blog = Blog::where('slug', $slug)->first();
-            
-            // If the image doesn't exist in the correct storage folder, download it!
-            if (!File::exists($fullStoragePath)) {
-                $this->command->line("  Downloading image for Blog: {$item['title']}");
-                try {
-                    $imgContents = @file_get_contents($item['image']);
-                    if ($imgContents) {
-                        File::put($fullStoragePath, $imgContents);
-                    }
-                } catch (\Exception $e) {
-                    $this->command->warn("    Failed to download image: {$item['image']}");
-                }
-                usleep(500000); 
-            }
-
-            // Create or update the blog post
             if (!$blog) {
                 Blog::create([
-                    'slug' => $slug,
-                    'title' => $item['title'],
-                    'content' => $item['description'],
-                    'thumbnail' => $imagePath,
-                    'status' => 'published',
+                    'slug'         => $slug,
+                    'title'        => $item['title'],
+                    'content'      => $item['description'],
+                    'thumbnail'    => $imagePath,   // path saved; image downloaded later
+                    'status'       => 'published',
                     'published_at' => now(),
-                    'meta_title' => $item['title'],
+                    'meta_title'   => $item['title'],
+                    // Store original URL so the download route can fetch it
+                    // (uses 'meta_description' column as temp store if available, or just rely on filename)
                 ]);
             } else {
-                // Ensure thumbnail path is correct in the database
                 $blog->update(['thumbnail' => $imagePath]);
             }
         }

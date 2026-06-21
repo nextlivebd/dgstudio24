@@ -88,43 +88,25 @@ class ShehalaPortfolioSeeder extends Seeder
 
             $categoryId = $categoriesMap[$item['category']];
             $slug = Str::slug($item['title']) ?: 'portfolio-' . uniqid();
-            
-            // Generate Local Image Name
+
+            // Generate local image name (no download here — images fetched separately)
             $ext = pathinfo(parse_url($item['image'], PHP_URL_PATH), PATHINFO_EXTENSION);
             if (empty($ext) || strlen($ext) > 4) $ext = 'jpg';
             $imgName = Str::slug($item['title']) . '-' . md5($item['image']) . '.' . $ext;
             $imagePath = 'uploads/portfolios/' . $imgName;
 
-            // Only Download if we don't have it in the DB already (Extra smart)
-            if (!Portfolio::where('website_url', $item['website_url'])->exists()) {
-                
-                $this->command->line("  Downloading image: {$item['image']}");
-                
-                try {
-                    $imgContents = @file_get_contents($item['image']);
-                    if ($imgContents) {
-                        File::put(public_path($imagePath), $imgContents);
-                        
-                        // Create Portfolio item
-                        Portfolio::firstOrCreate(
-                            ['website_url' => $item['website_url']], // Unique Identifier
-                            [
-                                'slug' => $slug,
-                                'portfolio_category_id' => $categoryId,
-                                'title' => $item['title'],
-                                'image' => $imagePath,
-                                'status' => 1,
-                                'description' => '<p>Details for ' . $item['title'] . '</p>'
-                            ]
-                        );
-                    }
-                } catch (\Exception $e) {
-                    $this->command->warn("    Failed to download image: {$item['image']}");
-                }
-                
-                // Slight delay to prevent hammering the source server
-                usleep(500000); 
-            }
+            // Create Portfolio item (instant, no HTTP call)
+            Portfolio::firstOrCreate(
+                ['website_url' => $item['website_url']],
+                [
+                    'slug'                  => $slug,
+                    'portfolio_category_id' => $categoryId,
+                    'title'                 => $item['title'],
+                    'image'                 => $imagePath,  // path saved; image downloaded later
+                    'status'                => 1,
+                    'description'           => '<p>Details for ' . $item['title'] . '</p>'
+                ]
+            );
         }
 
         $this->command->info("Successfully seeded all portfolio items!");
