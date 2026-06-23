@@ -54,10 +54,16 @@ Route::get('/server-setup-run', function () {
         'seed_section_settings'     => ['label' => 'Seed: Section Settings',    'url' => '/setup-step/seed-section-settings'],
         'seed_slider'               => ['label' => 'Seed: Slider',              'url' => '/setup-step/seed-slider'],
         'seed_services'             => ['label' => 'Seed: Services',            'url' => '/setup-step/seed-services'],
+        'seed_services_section'     => ['label' => 'Seed: Services Section',    'url' => '/setup-step/seed-services-section'],
         'seed_portfolio'            => ['label' => 'Seed: Portfolio',           'url' => '/setup-step/seed-portfolio'],
         'seed_blog'                 => ['label' => 'Seed: Blog',                'url' => '/setup-step/seed-blog'],
         'seed_pages'                => ['label' => 'Seed: Pages',               'url' => '/setup-step/seed-pages'],
         'seed_home_video_banner'    => ['label' => 'Seed: Home Video Banner',   'url' => '/setup-step/seed-home-video-banner'],
+        'seed_home_about'           => ['label' => 'Seed: Home About',          'url' => '/setup-step/seed-home-about'],
+        'seed_home_trusted'         => ['label' => 'Seed: Home Trusted',        'url' => '/setup-step/seed-home-trusted'],
+        'seed_home_different'       => ['label' => 'Seed: Home Different',      'url' => '/setup-step/seed-home-different'],
+        'seed_home_cta'             => ['label' => 'Seed: Home CTA',            'url' => '/setup-step/seed-home-cta'],
+        'seed_testimonials'         => ['label' => 'Seed: Testimonials',        'url' => '/setup-step/seed-testimonials'],
     ];
 
     $progress = getSetupProgress();
@@ -209,15 +215,31 @@ Route::get('/setup-step/seed-slider', function () {
 Route::get('/setup-step/seed-services', function () {
     if (isSetupStepDone('seed_services')) {
         return setupResponse('Seed: Services', "<p class='skip'>⏭ ইতিমধ্যে সম্পন্ন, স্কিপ করা হয়েছে।</p>",
-            '/setup-step/seed-portfolio', 'Seed Portfolio');
+            '/setup-step/seed-services-section', 'Seed Services Section');
     }
     try {
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\ShehalaServiceSeeder', '--force' => true]);
         markSetupStepDone('seed_services');
         return setupResponse('Seed: Services', "<p class='ok'>✅ Services seeded!</p>",
-            '/setup-step/seed-portfolio', 'Seed Portfolio');
+            '/setup-step/seed-services-section', 'Seed Services Section');
     } catch (\Exception $e) {
         return setupResponse('Seed: Services', "<p class='err'>❌ Error: ".e($e->getMessage())."</p><a href='/setup-step/seed-services' class='btn'>🔄 আবার চেষ্টা করুন</a>");
+    }
+});
+
+// ── Step 7b: Seed Services Section ──────────────────────────────
+Route::get('/setup-step/seed-services-section', function () {
+    if (isSetupStepDone('seed_services_section')) {
+        return setupResponse('Seed: Services Section', "<p class='skip'>⏭ ইতিমধ্যে সম্পন্ন, স্কিপ করা হয়েছে।</p>",
+            '/setup-step/seed-portfolio', 'Seed Portfolio');
+    }
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\ServicesSectionSeeder', '--force' => true]);
+        markSetupStepDone('seed_services_section');
+        return setupResponse('Seed: Services Section', "<p class='ok'>✅ Services Section seeded!</p>",
+            '/setup-step/seed-portfolio', 'Seed Portfolio');
+    } catch (\Exception $e) {
+        return setupResponse('Seed: Services Section', "<p class='err'>❌ Error: ".e($e->getMessage())."</p><a href='/setup-step/seed-services-section' class='btn'>🔄 আবার চেষ্টা করুন</a>");
     }
 });
 
@@ -273,15 +295,95 @@ Route::get('/setup-step/seed-pages', function () {
 Route::get('/setup-step/seed-home-video-banner', function () {
     if (isSetupStepDone('seed_home_video_banner')) {
         return setupResponse('Seed: Home Video Banner', "<p class='skip'>⏭ ইতিমধ্যে সম্পন্ন, স্কিপ করা হয়েছে।</p>",
-            '/server-setup-run', 'Dashboard দেখুন');
+            '/setup-step/seed-home-about', 'Seed Home About');
     }
     try {
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\HomeVideoBannerSeeder', '--force' => true]);
         markSetupStepDone('seed_home_video_banner');
-        return setupResponse('Seed: Home Video Banner', "<p class='ok'>✅ Home Video Banner seeded!</p><br><p><b>🎉 সব ধাপ সম্পন্ন!</b></p>",
-            '/server-setup-run', 'Dashboard দেখুন');
+        return setupResponse('Seed: Home Video Banner', "<p class='ok'>✅ Home Video Banner seeded!</p>",
+            '/setup-step/seed-home-about', 'Seed Home About');
     } catch (\Exception $e) {
         return setupResponse('Seed: Home Video Banner', "<p class='err'>❌ Error: ".e($e->getMessage())."</p><a href='/setup-step/seed-home-video-banner' class='btn'>🔄 আবার চেষ্টা করুন</a>");
+    }
+});
+
+// ── Step 12: Seed Home About ─────────────────────────────────────
+Route::get('/setup-step/seed-home-about', function () {
+    if (isSetupStepDone('seed_home_about')) {
+        return setupResponse('Seed: Home About', "<p class='skip'>⏭ ইতিমধ্যে সম্পন্ন, স্কিপ করা হয়েছে।</p>",
+            '/setup-step/seed-home-trusted', 'Seed Home Trusted');
+    }
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\HomeAboutSeeder', '--force' => true]);
+        markSetupStepDone('seed_home_about');
+        return setupResponse('Seed: Home About', "<p class='ok'>✅ Home About seeded!</p>",
+            '/setup-step/seed-home-trusted', 'Seed Home Trusted');
+    } catch (\Exception $e) {
+        return setupResponse('Seed: Home About', "<p class='err'>❌ Error: ".e($e->getMessage())."</p><a href='/setup-step/seed-home-about' class='btn'>🔄 আবার চেষ্টা করুন</a>");
+    }
+});
+
+// ── Step 13: Seed Home Trusted ────────────────────────────────────
+Route::get('/setup-step/seed-home-trusted', function () {
+    if (isSetupStepDone('seed_home_trusted')) {
+        return setupResponse('Seed: Home Trusted', "<p class='skip'>⏭ ইতিমধ্যে সম্পন্ন, স্কিপ করা হয়েছে।</p>",
+            '/setup-step/seed-home-different', 'Seed Home Different');
+    }
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\HomeTrustedSeeder', '--force' => true]);
+        markSetupStepDone('seed_home_trusted');
+        return setupResponse('Seed: Home Trusted', "<p class='ok'>✅ Home Trusted seeded!</p>",
+            '/setup-step/seed-home-different', 'Seed Home Different');
+    } catch (\Exception $e) {
+        return setupResponse('Seed: Home Trusted', "<p class='err'>❌ Error: ".e($e->getMessage())."</p><a href='/setup-step/seed-home-trusted' class='btn'>🔄 আবার চেষ্টা করুন</a>");
+    }
+});
+
+// ── Step 14: Seed Home Different ─────────────────────────────────
+Route::get('/setup-step/seed-home-different', function () {
+    if (isSetupStepDone('seed_home_different')) {
+        return setupResponse('Seed: Home Different', "<p class='skip'>⏭ ইতিমধ্যে সম্পন্ন, স্কিপ করা হয়েছে।</p>",
+            '/setup-step/seed-home-cta', 'Seed Home CTA');
+    }
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\HomeDifferentSeeder', '--force' => true]);
+        markSetupStepDone('seed_home_different');
+        return setupResponse('Seed: Home Different', "<p class='ok'>✅ Home Different seeded!</p>",
+            '/setup-step/seed-home-cta', 'Seed Home CTA');
+    } catch (\Exception $e) {
+        return setupResponse('Seed: Home Different', "<p class='err'>❌ Error: ".e($e->getMessage())."</p><a href='/setup-step/seed-home-different' class='btn'>🔄 আবার চেষ্টা করুন</a>");
+    }
+});
+
+// ── Step 15: Seed Home CTA ───────────────────────────────────────
+Route::get('/setup-step/seed-home-cta', function () {
+    if (isSetupStepDone('seed_home_cta')) {
+        return setupResponse('Seed: Home CTA', "<p class='skip'>⏭ ইতিমধ্যে সম্পন্ন, স্কিপ করা হয়েছে।</p>",
+            '/setup-step/seed-testimonials', 'Seed Testimonials');
+    }
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\HomeCtaSeeder', '--force' => true]);
+        markSetupStepDone('seed_home_cta');
+        return setupResponse('Seed: Home CTA', "<p class='ok'>✅ Home CTA seeded!</p>",
+            '/setup-step/seed-testimonials', 'Seed Testimonials');
+    } catch (\Exception $e) {
+        return setupResponse('Seed: Home CTA', "<p class='err'>❌ Error: ".e($e->getMessage())."</p><a href='/setup-step/seed-home-cta' class='btn'>🔄 আবার চেষ্টা করুন</a>");
+    }
+});
+
+// ── Step 16: Seed Testimonials ───────────────────────────────────
+Route::get('/setup-step/seed-testimonials', function () {
+    if (isSetupStepDone('seed_testimonials')) {
+        return setupResponse('Seed: Testimonials', "<p class='skip'>⏭ ইতিমধ্যে সম্পন্ন, স্কিপ করা হয়েছে।</p>",
+            '/server-setup-run', 'Dashboard দেখুন');
+    }
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\TestimonialSeeder', '--force' => true]);
+        markSetupStepDone('seed_testimonials');
+        return setupResponse('Seed: Testimonials', "<p class='ok'>✅ Testimonials seeded!</p><br><p><b>🎉 সব ধাপ সম্পন্ন! ওয়েবসাইট প্রস্তুত।</b></p>",
+            '/server-setup-run', 'Dashboard দেখুন');
+    } catch (\Exception $e) {
+        return setupResponse('Seed: Testimonials', "<p class='err'>❌ Error: ".e($e->getMessage())."</p><a href='/setup-step/seed-testimonials' class='btn'>🔄 আবার চেষ্টা করুন</a>");
     }
 });
 
