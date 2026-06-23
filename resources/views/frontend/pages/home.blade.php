@@ -105,6 +105,7 @@
 
 
             <!-- aboutus-section -->
+            @if(isset($homeAbout) && $homeAbout)
             <section class="ttm-row aboutus-section-style2 clearfix home-page">
                 <div class="container">
                     <div class="row no-gutters align-items-center">
@@ -112,7 +113,11 @@
                         <div class="col-lg-6">
                             <!-- ttm_single_image-wrapper -->
                             <div class="ttm_single_image-wrapper">
-                                <img class="img-fluid" src="{{ asset('frontend/images/') }}/about2.jpg" title="single-img-two" alt="single-img-two">
+                                @if($homeAbout->image)
+                                    <img class="img-fluid" src="{{ asset($homeAbout->image) }}" title="about-image" alt="about-image">
+                                @else
+                                    <img class="img-fluid" src="{{ asset('frontend/images/') }}/about2.jpg" title="single-img-two" alt="single-img-two">
+                                @endif
                             </div>
                             <!-- ttm_single_image-wrapper end -->
                         </div>
@@ -122,25 +127,35 @@
                                 <!-- section title -->
                                 <div class="section-title with-desc clearfix">
                                     <div class="title-header">
-                                        <h5>About Global Graphic Giant</h5>
-                                        <h3 class="title">Global Graphic Giant grew from four persons company to a 100 persons company with in 19 years by repeatedly delivering client satisfaction.</h3>
+                                        @if($homeAbout->subtitle)
+                                            <h5>{{ $homeAbout->subtitle }}</h5>
+                                        @endif
+                                        @if($homeAbout->title)
+                                            <h3 class="title">{{ $homeAbout->title }}</h3>
+                                        @endif
                                     </div>
+                                    @if($homeAbout->description)
                                     <div class="title-desc">
-                                        <p>Global Graphic Giant is one of the fastest growing and forward thinking IT solution companies in Bangladesh, delivering outstanding software outsourcing services to clients in EU (Denmark, Norway, Germeny, Sweden), North
-                                            America and Japan since 2006. We have a successful track record in serving our customers across the globe with vast experience in technical domain such as ASP .Net, C#, Java, PHP, iOS, Android. We have global
-                                            presence in different time zones. We use latest technology and software for Web, e-commerce, Mobile Technology and Print Media.</p>
+                                        <p>{{ $homeAbout->description }}</p>
                                     </div>
+                                    @endif
                                 </div>
                                 <!-- section title end -->
                                 <!-- row -->
+                                @if(isset($homeAboutFeatures) && $homeAboutFeatures->isNotEmpty())
                                 <div class="row no-gutters mt-20">
+                                    @foreach($homeAboutFeatures as $feature)
                                     <div class="col-md-6 col-lg-6 col-sm-6">
                                         <!--  featured-icon-box -->
                                         <div class="featured-icon-box style3 left-icon icon-align-top featured-content2">
                                             <div class="featured-icon">
                                                 <!--  featured-icon -->
                                                 <div class="ttm-icon ttm-icon_element-color-skincolor ttm-icon_element-size-lg">
-                                                    <i class="ti ti-medall"></i>
+                                                    @if($feature->icon)
+                                                        <i class="{{ $feature->icon }}"></i>
+                                                    @else
+                                                        <i class="ti ti-star"></i>
+                                                    @endif
                                                     <!--  ttm-icon -->
                                                 </div>
                                             </div>
@@ -148,42 +163,21 @@
                                                 <!--  featured-content -->
                                                 <div class="featured-title">
                                                     <!--  featured-title -->
-                                                    <h5>100% Satisfaction</h5>
+                                                    <h5>{{ $feature->title }}</h5>
                                                 </div>
+                                                @if($feature->description)
                                                 <div class="featured-desc">
                                                     <!--  featured-desc -->
-                                                    <p>We are with you 24/7/365 to ensure your operations run smoothly.</p>
+                                                    <p>{{ $feature->description }}</p>
                                                 </div>
+                                                @endif
                                             </div>
                                         </div>
                                         <!--  featured-icon-box END -->
                                     </div>
-                                    <div class="col-md-6 col-lg-6 col-sm-6">
-                                        <!--  featured-icon-box -->
-                                        <div class="featured-icon-box style3 left-icon icon-align-top">
-                                            <div class="featured-icon">
-                                                <!--  featured-icon -->
-                                                <div class="ttm-icon ttm-icon_element-color-skincolor ttm-icon_element-size-lg">
-                                                    <i class="ti ti-bookmark-alt"></i>
-                                                    <!--  ttm-icon -->
-                                                </div>
-                                            </div>
-                                            <div class="featured-content">
-                                                <!--  featured-content -->
-                                                <div class="featured-title">
-                                                    <!--  featured-title -->
-                                                    <h5>Reduce Your Costs</h5>
-                                                </div>
-                                                <div class="featured-desc">
-                                                    <!--  featured-desc -->
-                                                    <p>In comparison to Western European and North American prices we can reduce your costs by 50%</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!--  featured-icon-box END -->
-                                    </div>
-
+                                    @endforeach
                                 </div>
+                                @endif
                                 <!-- row END-->
                                 <!-- separator -->
                                 <div class="separator">
@@ -202,9 +196,12 @@
                     <!-- row end-->
                 </div>
             </section>
+            @endif
             <!-- aboutus-section end -->
 
+
             <!-- fid-section -->
+            @if(isset($homeTrustedSection) && $homeTrustedSection)
             <section class="ttm-row bottomzero-padding-section bg-img6 position-relative z-1 clearfix">
                 <div class="container">
                     <div class="row no-gutters">
@@ -220,152 +217,77 @@
                                                 <!-- section title -->
                                                 <div class="section-title with-desc mb-40 clearfix">
                                                     <div class="title-header">
-                                                        <h5>About Global Graphic Giant</h5>
-                                                        <h2 class="title">Trusted by 5,000+ <span>Happy Clients</span></h2>
+                                                        @if($homeTrustedSection->subtitle)
+                                                            <h5>{{ $homeTrustedSection->subtitle }}</h5>
+                                                        @endif
+                                                        <h2 class="title">{{ $homeTrustedSection->title }} @if($homeTrustedSection->title_highlight)<span>{{ $homeTrustedSection->title_highlight }}</span>@endif</h2>
                                                     </div>
-                                                    <div class="title-desc">
-                                                        <p>Global Graphic Giant grew from four persons company to a 100 persons company with in 19 years by repeatedly delivering client satisfaction.</p>
-                                                    </div>
+                                                    @if($homeTrustedSection->description)
+                                                        <div class="title-desc">
+                                                            <p>{!! $homeTrustedSection->description !!}</p>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                                 <!-- section title end -->
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <!--  featured-icon-box -->
-                                                        <div class="featured-icon-box style4 left-icon">
-                                                            <div class="featured-icon">
-                                                                <!--  featured-icon -->
-                                                                <div class="ttm-icon ttm-icon_element-color-white ttm-icon_element-size-md">
-                                                                    <i class="flaticon flaticon-24h"></i>
-                                                                    <!--  ttm-icon -->
+                                                
+                                                @if(isset($homeTrustedFeatures) && $homeTrustedFeatures->isNotEmpty())
+                                                    <div class="row">
+                                                        @foreach($homeTrustedFeatures as $feature)
+                                                            <div class="col-md-4">
+                                                                <!--  featured-icon-box -->
+                                                                <div class="featured-icon-box style4 left-icon">
+                                                                    @if($feature->icon)
+                                                                        <div class="featured-icon">
+                                                                            <!--  featured-icon -->
+                                                                            <div class="ttm-icon ttm-icon_element-color-white ttm-icon_element-size-md">
+                                                                                <i class="{{ $feature->icon }}"></i>
+                                                                                <!--  ttm-icon -->
+                                                                            </div>
+                                                                        </div>
+                                                                    @endif
+                                                                    <div class="featured-content">
+                                                                        <!--  featured-content -->
+                                                                        <div class="featured-title">
+                                                                            <!--  featured-title -->
+                                                                            <h5 class="fw-500">{{ $feature->title }}</h5>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
+                                                                <!--  featured-icon-box END -->
                                                             </div>
-                                                            <div class="featured-content">
-                                                                <!--  featured-content -->
-                                                                <div class="featured-title">
-                                                                    <!--  featured-title -->
-                                                                    <h5 class="fw-500">100% Satisfaction</h5>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!--  featured-icon-box END -->
+                                                        @endforeach
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        <!--  featured-icon-box -->
-                                                        <div class="featured-icon-box style4 left-icon">
-                                                            <div class="featured-icon">
-                                                                <!--  featured-icon -->
-                                                                <div class="ttm-icon ttm-icon_element-color-white ttm-icon_element-size-md">
-                                                                    <i class="flaticon flaticon-code"></i>
-                                                                    <!--  ttm-icon -->
+                                                @endif
+
+                                                @if(isset($homeTrustedCounters) && $homeTrustedCounters->isNotEmpty())
+                                                    <div class="row ttm-fid-row-wrapper">
+                                                        @foreach($homeTrustedCounters as $counter)
+                                                            <div class="col-md-3 col-sm-3 Completedbox">
+                                                                <!--ttm-fid-->
+                                                                <div class="ttm-fid inside ttm-fid-view-lefticon style1">
+                                                                    @if($counter->icon)
+                                                                        <div class="ttm-fid-left">
+                                                                            <!--ttm-fid-left-->
+                                                                            <div class="ttm-fid-icon-wrapper">
+                                                                                <i class="{{ $counter->icon }}"></i>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endif
+                                                                    <div class="ttm-fid-contents text-left">
+                                                                        <!--ttm-fid-contents-->
+                                                                        <h4 class="ttm-fid-inner">
+                                                                            <span data-appear-animation="animateDigits" data-from="0" data-to="{{ $counter->count }}" data-interval="5" data-before="" data-before-style="sup" data-after="" data-after-style="sub">{{ $counter->count }}</span>
+                                                                        </h4>
+                                                                        <h3 class="ttm-fid-title">{{ $counter->label }}</h3>
+                                                                        <!--ttm-fid-title-->
+                                                                    </div>
                                                                 </div>
+                                                                <!-- ttm-fid end-->
                                                             </div>
-                                                            <div class="featured-content">
-                                                                <!--  featured-content -->
-                                                                <div class="featured-title">
-                                                                    <!--  featured-title -->
-                                                                    <h5 class="fw-500">World Class Developer</h5>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!--  featured-icon-box END -->
+                                                        @endforeach
                                                     </div>
-                                                    <div class="col-md-4">
-                                                        <!--  featured-icon-box -->
-                                                        <div class="featured-icon-box style4 left-icon">
-                                                            <div class="featured-icon">
-                                                                <!--  featured-icon -->
-                                                                <div class="ttm-icon ttm-icon_element-color-white ttm-icon_element-size-md">
-                                                                    <i class="flaticon flaticon-data"></i>
-                                                                    <!--  ttm-icon -->
-                                                                </div>
-                                                            </div>
-                                                            <div class="featured-content">
-                                                                <!--  featured-content -->
-                                                                <div class="featured-title">
-                                                                    <!--  featured-title -->
-                                                                    <h5 class="fw-500">World Class Designer & 3D Artist</h5>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!--  featured-icon-box END -->
-                                                    </div>
-                                                </div>
-                                                <div class="row ttm-fid-row-wrapper">
-                                                    <div class="col-md-3 col-sm-3 Completedbox">
-                                                        <!--ttm-fid-->
-                                                        <div class="ttm-fid inside ttm-fid-view-lefticon style1">
-                                                            <div class="ttm-fid-left">
-                                                                <!--ttm-fid-left-->
-                                                                <div class="ttm-fid-icon-wrapper">
-                                                                    <i class="flaticon flaticon-developer"></i>
-                                                                </div>
-                                                            </div>
-                                                            <div class="ttm-fid-contents text-left">
-                                                                <!--ttm-fid-contents-->
-                                                                <h4 class="ttm-fid-inner">
-                                                                    <span data-appear-animation="animateDigits" data-from="0" data-to="14" data-interval="5" data-before="" data-before-style="sup" data-after="" data-after-style="sub">478</span>
-                                                                </h4>
-                                                                <h3 class="ttm-fid-title">Markets</h3>
-                                                                <!--ttm-fid-title-->
-                                                            </div>
-                                                        </div>
-                                                        <!-- ttm-fid end-->
-                                                    </div>
-                                                    <div class="col-md-3 col-sm-3 Completedbox">
-                                                        <!--ttm-fid-->
-                                                        <div class="ttm-fid inside ttm-fid-view-lefticon style1">
-                                                            <div class="ttm-fid-left">
-                                                                <!--ttm-fid-left-->
-                                                                <div class="ttm-fid-icon-wrapper">
-                                                                    <i class="flaticon flaticon-developer"></i>
-                                                                </div>
-                                                            </div>
-                                                            <div class="ttm-fid-contents text-left">
-                                                                <!--ttm-fid-contents-->
-                                                                <h4 class="ttm-fid-inner">
-                                                                    <span data-appear-animation="animateDigits" data-from="0" data-to="90" data-interval="5" data-before="" data-before-style="sup" data-after="" data-after-style="sub">478</span>
-                                                                </h4>
-                                                                <h3 class="ttm-fid-title">FTE</h3>
-                                                                <!--ttm-fid-title-->
-                                                            </div>
-                                                        </div>
-                                                        <!-- ttm-fid end-->
-                                                    </div>
-                                                    <div class="col-md-3 col-sm-3 Completedbox">
-                                                        <!--ttm-fid-->
-                                                        <div class="ttm-fid inside ttm-fid-view-lefticon style1">
-                                                            <div class="ttm-fid-left">
-                                                                <div class="ttm-fid-icon-wrapper">
-                                                                    <i class="flaticon flaticon-interaction"></i>
-                                                                </div>
-                                                            </div>
-                                                            <div class="ttm-fid-contents text-left">
-                                                                <h4 class="ttm-fid-inner">
-                                                                    <span data-appear-animation="animateDigits" data-from="0" data-to="13214" data-interval="5" data-before="" data-before-style="sup" data-after="" data-after-style="sub">642</span>
-                                                                </h4>
-                                                                <h3 class="ttm-fid-title">Jobs Completed</h3>
-                                                            </div>
-                                                        </div>
-                                                        <!-- ttm-fid end-->
-                                                    </div>
-                                                    <div class="col-md-3 col-sm-3 Completedbox">
-                                                        <!--ttm-fid-->
-                                                        <div class="ttm-fid inside ttm-fid-view-lefticon style1">
-                                                            <div class="ttm-fid-left">
-                                                                <div class="ttm-fid-icon-wrapper">
-                                                                    <i class="flaticon flaticon-global-1"></i>
-                                                                </div>
-                                                            </div>
-                                                            <div class="ttm-fid-contents text-left">
-                                                                <h4 class="ttm-fid-inner">
-                                                                    <span data-appear-animation="animateDigits" data-from="0" data-to="323510" data-interval="5" data-before="" data-before-style="sup" data-after="" data-after-style="sub">578</span>
-                                                                </h4>
-                                                                <h3 class="ttm-fid-title">Deliverables</h3>
-                                                            </div>
-                                                        </div>
-                                                        <!-- ttm-fid end-->
-                                                    </div>
-                                                </div>
+                                                @endif
+
                                             </div>
                                         </div>
                                     </div>
@@ -375,6 +297,7 @@
                     </div>
                 </div>
             </section>
+            @endif
             <!-- fid-section -->
 
             <!-- services-section -->
@@ -387,8 +310,15 @@
                             <!-- section title -->
                             <div class="section-title with-desc text-center clearfix">
                                 <div class="title-header">
-                                    <h5>Our Services</h5>
-                                    <h2 class="title">We run all kinds of Web Development, Image Design & 3D services with 19+ years of <span>experience</span></h2>
+                                    @if(isset($servicesSectionSetting) && $servicesSectionSetting)
+                                        @if($servicesSectionSetting->subtitle)
+                                            <h5>{{ $servicesSectionSetting->subtitle }}</h5>
+                                        @endif
+                                        <h2 class="title">{{ $servicesSectionSetting->title }} @if($servicesSectionSetting->title_highlight)<span>{{ $servicesSectionSetting->title_highlight }}</span>@endif</h2>
+                                    @else
+                                        <h5>Our Services</h5>
+                                        <h2 class="title">We run all kinds of Web Development, Image Design & 3D services with 19+ years of <span>experience</span></h2>
+                                    @endif
                                 </div>
                             </div>
                             <!-- section title end -->
@@ -434,18 +364,19 @@
             <!-- services-section end -->
 
             <!-- topzero-padding-section -->
+            @if(isset($homeCtaSection) && $homeCtaSection)
             <section class="ttm-row zero-padding-section mt_95 res-991-mt-0 clearfix">
                 <div class="container">
                     <div class="row no-gutters">
                         <div class="col-lg-3">
                             <!-- col-bg-img-three -->
                             <div class="col-bg-img-three ttm-bg ttm-col-bgimage-yes res-991-h-auto">
-                                <div class="ttm-col-wrapper-bg-layer ttm-bg-layer">
+                                <div class="ttm-col-wrapper-bg-layer ttm-bg-layer" style="background-image: url('{{ asset($homeCtaSection->image ?? 'frontend/images/bg-image/Save_money.png') }}') !important;">
                                     <div class="ttm-bg-layer-inner"></div>
                                 </div>
                             </div>
                             <!-- Responsive View image -->
-                            <img src="{{ asset('frontend/images/') }}/bg-image/Save_money.png" class="ttm-equal-height-image" alt="col-bgimage-3">
+                            <img src="{{ asset($homeCtaSection->image ?? 'frontend/images/bg-image/Save_money.png') }}" class="ttm-equal-height-image" alt="col-bgimage-3">
                         </div>
                         <div class="col-lg-9">
                             <div class="ttm-bgcolor-skincolor ttm-bg ttm-col-bgcolor-yes ttm-right-span">
@@ -454,9 +385,8 @@
                                 </div>
                                 <div class="layer-content">
                                     <div class="spacing-6 ttm-textcolor-white">
-                                        <h3 class="mb-5">Knock Us if you need to create an awesome website & web application!</h3>
-                                        <p class="mb-0">Global Graphic Giant is one of the fastest growing and forward thinking IT solution companies in Bangladesh, delivering outstanding software outsourcing services to clients in EU (Denmark, Norway, Germeny, Sweden), North
-                                            America and Japan since 2006. </p>
+                                        <h3 class="mb-5">{{ $homeCtaSection->title }}</h3>
+                                        <p class="mb-0">{{ $homeCtaSection->description }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -464,9 +394,11 @@
                     </div>
                 </div>
             </section>
+            @endif
             <!-- topzero-padding-section -->
 
             <!-- tab-section -->
+            @if(isset($homeDifferentSection) && $homeDifferentSection && isset($homeDifferentTabs) && $homeDifferentTabs->isNotEmpty())
             <section class="ttm-row tab-section clearfix">
                 <div class="container">
                     <div class="row">
@@ -474,9 +406,10 @@
                             <!-- section title -->
                             <div class="section-title text-center with-desc clearfix">
                                 <div class="title-header">
-                                    <h5>Why Are We Different From Others</h5>
-                                    <h2 class="title">We are not like traditional outsourcing providers where they only focus on cost reduction. We focus on quality first followed by other aspects. We do not want to be a cheap provider rather than quality solution provider
-                                        within <span>affordable cost. </span></h2>
+                                    @if($homeDifferentSection->subtitle)
+                                        <h5>{{ $homeDifferentSection->subtitle }}</h5>
+                                    @endif
+                                    <h2 class="title">{{ $homeDifferentSection->title }} @if($homeDifferentSection->title_highlight)<span>{{ $homeDifferentSection->title_highlight }}</span>@endif</h2>
                                 </div>
                             </div>
                             <!-- section title end -->
@@ -485,77 +418,45 @@
                     <!-- row end -->
                     <!-- row -->
                     <div class="row">
-
                         <div class="col-lg-12">
                             <div class="ttm-tabs text-center ttm-tab-style-classic style1">
                                 <ul class="tabs mb-20">
-                                    <!-- tabs -->
-                                    <li class="tab active"><a href="#"> <i class="flaticon flaticon-code"></i> Reduce your costs</a></li>
-                                    <li class="tab"><a href="#"> <i class="flaticon flaticon-report"></i> Simple Workflow </a></li>
-                                    <li class="tab"><a href="#"> <i class="flaticon flaticon-24h"></i> 24 Hour Service </a></li>
-
+                                    @foreach($homeDifferentTabs as $index => $tab)
+                                        <li class="tab {{ $index === 0 ? 'active' : '' }}">
+                                            <a href="#">
+                                                @if($tab->icon)
+                                                    <i class="flaticon {{ $tab->icon }}"></i>
+                                                @endif
+                                                {{ $tab->title }}
+                                            </a>
+                                        </li>
+                                    @endforeach
                                 </ul>
                                 <!-- tabs end-->
                                 <div class="content-tab width-100 box-shadow">
-                                    <!--content-tabs -->
-                                    <!-- content-inner -->
-                                    <div class="content-inner active" style="display: block;">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="text-left">
-                                                    <h3 class="title fs-30"> Reduce your project costs</h3>
-                                                    <p>In comparison to Western European and North American prices we can reduce your costs by 50% when it comes to Web development, Mobile Application development, HTML5, Flash production & Graphics Design
-                                                        (Clipping Path, Image masking, Newspaper Ads design, Magazine makeup, Company branding etc.)</p>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <!-- row end -->
-                                    </div>
-                                    <!-- content-inner -->
-                                    <!-- row end-->
-                                    <!-- content-inner -->
-                                    <div class="content-inner" style="display: none;">
-                                        <div class="row">
-
-                                            <div class="col-lg-12">
-                                                <div class="text-left res-991-mt-30">
-                                                    <h3 class="title fs-30">Our Process Workflow</h3>
-                                                    <p>We provide a well proven and efficient workflow. Just send the assignment through our FTP and get your finished materials back within few hours based on job complexity.</p>
-
+                                    @foreach($homeDifferentTabs as $index => $tab)
+                                        <div class="content-inner {{ $index === 0 ? 'active' : '' }}" style="display: {{ $index === 0 ? 'block' : 'none' }};">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="text-left">
+                                                        <h3 class="title fs-30">{{ $tab->content_title }}</h3>
+                                                        <p>{{ $tab->content_description }}</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- row end -->
-                                    </div>
-                                    <!-- content-inner -->
-                                    <!-- row end-->
-                                    <!-- content-inner -->
-                                    <div class="content-inner" style="display: none;">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="text-left">
-                                                    <h3 class="title fs-30">Our 24-hour service</h3>
-                                                    <p>We are with you 24/7/365 to ensure your operations run smoothly. We are committed to make sure that your business is always running-without interruption.</p>
-
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <!-- row end -->
-                                    </div>
-                                    <!-- content-inner -->
-                                    <!-- row end-->
-
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
+            @endif
             <!-- tab-section end -->
 
             <!-- testimonial-section end -->
+            @if(isset($testimonialSection) && $testimonialSection)
             <section class="ttm-row bottomzero-padding-section ttm-bgcolor-grey ttm-bg ttm-bgimage-yes bg-img8 clearfix">
                 <div class="ttm-row-wrapper-bg-layer ttm-bg-layer"></div>
                 <div class="container">
@@ -567,97 +468,83 @@
                                 <!-- section title -->
                                 <div class="section-title with-desc clearfix">
                                     <div class="title-header">
-                                        <h5>About us</h5>
-                                        <h2 class="title">We deal with the aspects of professional <span>Web Services</span></h2>
+                                        @if($testimonialSection->subtitle)
+                                            <h5>{{ $testimonialSection->subtitle }}</h5>
+                                        @endif
+                                        <h2 class="title">{{ $testimonialSection->title }} @if($testimonialSection->title_highlight)<span>{{ $testimonialSection->title_highlight }}</span>@endif</h2>
                                     </div>
                                 </div>
                                 <!-- section title end -->
-                                <div class="testimonial-slide box-sahdow ttm-bgcolor-white col-bg-img-four style1 owl-carousel" data-item="1" data-nav="false" data-dots="true" data-auto="false">
-                                    <!-- testimonials -->
-                                    <div class="testimonials text-center">
-                                        <div class="testimonial-content">
-                                            <!-- testimonials-content -->
-                                            <div class="testimonial-avatar">
-                                                <div class="testimonial-img">
-                                                    <!-- testimonials-img -->
-                                                    <img class="img-center" src="{{ asset('frontend/images/') }}/testimonial/man.jpg" alt="testimonial-img">
+                                
+                                @if(isset($testimonials) && $testimonials->count() > 0)
+                                    <div class="testimonial-slide box-sahdow ttm-bgcolor-white col-bg-img-four style1 owl-carousel" data-item="1" data-nav="false" data-dots="true" data-auto="false">
+                                        @forelse($testimonials as $t)
+                                            <!-- testimonials -->
+                                            <div class="testimonials text-center">
+                                                <div class="testimonial-content">
+                                                    <!-- testimonials-content -->
+                                                    <div class="testimonial-avatar">
+                                                        <div class="testimonial-img">
+                                                            <!-- testimonials-img -->
+                                                            <img class="img-center" src="{{ $t->avatar ? asset($t->avatar) : asset('frontend/images/testimonial/man.jpg') }}" alt="testimonial-img">
+                                                        </div>
+                                                    </div>
+                                                    <blockquote>{{ $t->quote }}</blockquote>
+                                                    <div class="ttm-ratting-star">
+                                                        @for($i = 1; $i <= 5; $i++)
+                                                            <i class="fa fa-star{{ $i <= $t->rating ? '' : '-o' }}"></i>
+                                                        @endfor
+                                                    </div>
+                                                    <div class="testimonial-caption">
+                                                        <!-- testimonials-caption -->
+                                                        <h6>{{ $t->name }}</h6>
+                                                        @if($t->position)
+                                                            <label>{{ $t->position }}</label>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <blockquote>I am working with Global Graphic Giant for the past 5 years. I find Global Graphic Giantis very professional and always putting the needs of their customers first. You can always be assured the work produced by Global Graphic Giant is top
-                                                quality on all levels. Always a pleasure working with Shehala.</blockquote>
-                                            <div class="ttm-ratting-star">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </div>
-                                            <div class="testimonial-caption">
-                                                <!-- testimonials-caption -->
-                                                <h6>Eddle Cipolla</h6>
-                                                <label>Account Director at St. Joseph Communications, Canada</label>
-                                            </div>
-                                        </div>
+                                            <!-- testimonials END -->
+                                        @empty
+                                        @endforelse
                                     </div>
-                                    <!-- testimonials END -->
-                                    <!-- testimonials -->
-                                    <div class="testimonials text-center">
-                                        <div class="testimonial-content">
-                                            <!-- testimonials-content -->
-                                            <div class="testimonial-avatar">
-                                                <div class="testimonial-img">
-                                                    <!-- testimonials-img -->
-                                                    <img class="img-center" src="{{ asset('frontend/images/') }}/testimonial/man.jpg" alt="testimonial-img">
-                                                </div>
-                                            </div>
-                                            <blockquote>I have worked with many different outsourcing companies (suppliers of different products), Global Graphic Giantis without doubt, one of the best companies. They work fast, good and for a fair price. They are not the cheapest
-                                                but, you can’t get better quality cheaper. Quality and price go hand in hand.</blockquote>
-                                            <div class="ttm-ratting-star">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </div>
-                                            <div class="testimonial-caption">
-                                                <!-- testimonials-caption -->
-                                                <h6>Chris Mikkelsen</h6>
-                                                <label>Production Chief at enVision</label>
-                                            </div>
-                                        </div>
-                                    </div>
+                                @endif
 
-                                    <!-- testimonials END -->
-                                </div>
-                                <!-- separator -->
-                                <div class="separator">
-                                    <div class="sep-line"></div>
-                                </div>
-                                <!-- separator END-->
-                                <div class="card border-0">
-                                    <div class="card-body">
-                                        <!-- featured-icon-box -->
-                                        <div class="featured-icon-box style2 left-icon icon-align-top">
-                                            <div class="featured-icon">
-                                                <!-- featured-icon -->
-                                                <div class="ttm-icon ttm-icon_element-color-skincolor ttm-icon_element-size-lg">
-                                                    <i class="flaticon flaticon-call"></i>
-                                                </div>
-                                            </div>
-                                            <div class="featured-content">
-                                                <div class="featured-desc">
-                                                    <!-- featured desc -->
-                                                    <p>Need a service &amp; ready to order? Call us</p>
-                                                </div>
-                                                <div class="featured-title">
-                                                    <!-- featured title -->
-                                                    <h5>Contact Us: <strong class="ttm-textcolor-skincolor">+1 (416) 686-3111</strong></h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- featured-icon-box END-->
+                                @if($testimonialSection->cta_text || $testimonialSection->cta_phone)
+                                    <!-- separator -->
+                                    <div class="separator">
+                                        <div class="sep-line"></div>
                                     </div>
-                                </div>
+                                    <!-- separator END-->
+                                    <div class="card border-0">
+                                        <div class="card-body">
+                                            <!-- featured-icon-box -->
+                                            <div class="featured-icon-box style2 left-icon icon-align-top">
+                                                <div class="featured-icon">
+                                                    <!-- featured-icon -->
+                                                    <div class="ttm-icon ttm-icon_element-color-skincolor ttm-icon_element-size-lg">
+                                                        <i class="flaticon flaticon-call"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="featured-content">
+                                                    @if($testimonialSection->cta_text)
+                                                        <div class="featured-desc">
+                                                            <!-- featured desc -->
+                                                            <p>{{ $testimonialSection->cta_text }}</p>
+                                                        </div>
+                                                    @endif
+                                                    @if($testimonialSection->cta_phone)
+                                                        <div class="featured-title">
+                                                            <!-- featured title -->
+                                                            <h5>Contact Us: <strong class="ttm-textcolor-skincolor">{{ $testimonialSection->cta_phone }}</strong></h5>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <!-- featured-icon-box END-->
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                             <!-- spacing-2 END -->
                         </div>
@@ -665,64 +552,108 @@
                             <div class="position-relative res-991-mt-30">
                                 <!-- ttm_single_image-wrapper -->
                                 <div class="ttm_single_image-wrapper text-right">
-                                    <img class="img-fluid" src="{{ asset('frontend/images/') }}/indicate2.jpg" title="single-img-four" alt="single-img-four">
+                                    <img class="img-fluid" src="{{ $testimonialSection->right_image ? asset($testimonialSection->right_image) : asset('frontend/images/indicate2.jpg') }}" title="single-img-four" alt="single-img-four">
                                 </div>
                                 <!-- ttm_single_image-wrapper end -->
-                                <div class="ttm-highlight-fid-style-1">
-                                    <!--ttm-fid-->
-                                    <div class="ttm-fid inside without-icon">
-                                        <div class="ttm-fid-contents text-left">
-                                            <h4 class="ttm-fid-inner">
-                                                <span data-appear-animation="animateDigits" data-from="0" data-to="19" data-interval="2" data-before="" data-before-style="sup" data-after="" data-after-style="sub">14</span>
-                                            </h4>
-                                            <h3 class="ttm-fid-title">Years of Experience Web Solution </h3>
+                                @if($testimonialSection->experience_count !== null)
+                                    <div class="ttm-highlight-fid-style-1">
+                                        <!--ttm-fid-->
+                                        <div class="ttm-fid inside without-icon">
+                                            <div class="ttm-fid-contents text-left">
+                                                <h4 class="ttm-fid-inner">
+                                                    <span data-appear-animation="animateDigits" data-from="0" data-to="{{ $testimonialSection->experience_count }}" data-interval="2" data-before="" data-before-style="sup" data-after="" data-after-style="sub">{{ $testimonialSection->experience_count }}</span>
+                                                </h4>
+                                                @if($testimonialSection->experience_label)
+                                                    <h3 class="ttm-fid-title">{{ $testimonialSection->experience_label }}</h3>
+                                                @endif
+                                            </div>
                                         </div>
+                                        <!-- ttm-fid end-->
                                     </div>
-                                    <!-- ttm-fid end-->
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
                     <!-- row end -->
                 </div>
             </section>
-            <!-- testimonial-section end -->
+            @endif
+            <!-- testimonial-section end -->->
 
             <!-- first-row-title-section -->
-            <section class="ttm-row second-row-title-section mt_90 ttm-bgcolor-darkgrey ttm-bg ttm-bgimage-yes bg-img9 clearfix">
+            @php
+                $vb = $homeVideoBanner ?? null;
+                $bgStyle = '';
+                if ($vb && $vb->background_image) {
+                    $bgStyle = 'background-image: url(' . asset($vb->background_image) . '); background-size: cover; background-position: center;';
+                }
+            @endphp
+            @if(!$vb || $vb->status)
+            <section class="ttm-row second-row-title-section mt_90 ttm-bgcolor-darkgrey ttm-bg ttm-bgimage-yes bg-img9 clearfix" @if($bgStyle) style="{{ $bgStyle }}" @endif>
                 <div class="ttm-row-wrapper-bg-layer ttm-bg-layer"></div>
                 <div class="container">
                     <div class="row">
                         <!-- row -->
                         <div class="col-lg-8 offset-lg-2">
                             <div class="text-center">
+
+                                @if($vb)
+                                    {{-- Logo display --}}
+                                    @if($vb->logo_source === 'custom_logo' && $vb->custom_logo)
+                                        <div class="mb-30">
+                                            <img src="{{ asset($vb->custom_logo) }}" alt="Logo" style="max-height: 80px; object-fit: contain;">
+                                        </div>
+                                    @elseif($vb->logo_source === 'site_logo' && !$vb->video_url)
+                                        <div class="mb-30">
+                                            <img src="{{ get_setting('logo') ? asset(get_setting('logo')) : asset('frontend/images/shehalaitlimited.png') }}" alt="{{ get_setting('site_title', 'DG Studio') }} Logo" style="max-height: 80px; object-fit: contain;">
+                                        </div>
+                                    @endif
+                                @endif
+
+                                @if(!$vb || $vb->video_url)
                                 <div class="ttm-play-icon-btn mb-35">
                                     <div class="ttm-play-icon-animation">
-                                        <a href="https://www.youtube.com/embed/9fidoaaOn_4" target="_blank" class="ttm_prettyphotouuu">
+                                        <a href="{{ $vb && $vb->video_url ? $vb->video_url : 'https://www.youtube.com/embed/9fidoaaOn_4' }}" target="_blank" class="ttm_prettyphotouuu">
                                             <div class="ttm-icon ttm-icon_element-bgcolor-skincolor ttm-icon_element-size-sm ttm-icon_element-style-round">
                                                 <i class="fa fa-play"></i>
                                             </div>
                                         </a>
                                     </div>
                                 </div>
+                                @endif
+
                                 <!-- section-title -->
                                 <div class="section-title row-title clearfix">
                                     <div class="title-header">
-                                        <h2 class="title"> We help to create your business identity & <span>stunning on online,</span></h2>
-
+                                        <h2 class="title">
+                                            {{ $vb ? $vb->title : 'We help to create your business identity &' }}
+                                            @if($vb && $vb->title_highlight)
+                                                <span>{{ $vb->title_highlight }}</span>
+                                            @else
+                                                <span>stunning on online,</span>
+                                            @endif
+                                        </h2>
                                     </div>
-                                    <div class="title-desc">with Basic Website, Web Application, CMS Web Development, Dynamic Website to Advanced Level of Ecommerce Development.</div>
+                                    <div class="title-desc">{{ $vb ? $vb->description : 'with Basic Website, Web Application, CMS Web Development, Dynamic Website to Advanced Level of Ecommerce Development.' }}</div>
                                 </div>
                                 <!-- section-title end -->
+
+                                @if(!$vb || $vb->btn_text)
                                 <div class="mt-40">
-                                    <a href="portfolio" class="ttm-btn ttm-btn-size-md ttm-btn-style-border ttm-btn-color-white">View Portfolio</a>
+                                    <a href="{{ $vb && $vb->btn_url ? url($vb->btn_url) : url('portfolio') }}" class="ttm-btn ttm-btn-size-md ttm-btn-style-border ttm-btn-color-white">
+                                        {{ $vb && $vb->btn_text ? $vb->btn_text : 'View Portfolio' }}
+                                    </a>
                                 </div>
+                                @endif
+
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
+            @endif
             <!-- first-row-title-section END-->
+
 
 <!-- portfolio-section -->
 <section class="ttm-row bottomzero-padding-section position-relative clearfix home-portfolio">

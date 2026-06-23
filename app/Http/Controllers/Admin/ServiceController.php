@@ -15,7 +15,8 @@ class ServiceController extends Controller
     public function index()
     {
         $services = Service::with('category')->latest()->get();
-        return view('admin.services.index', compact('services'));
+        $section  = \App\Models\ServicesSectionSetting::first();
+        return view('admin.services.index', compact('services', 'section'));
     }
 
     public function create()
@@ -120,5 +121,29 @@ class ServiceController extends Controller
         
         $service->delete();
         return redirect()->route('admin.services.index')->with('success', 'Service deleted successfully.');
+    }
+
+    public function editSection()
+    {
+        $section = \App\Models\ServicesSectionSetting::firstOrNew([]);
+        return view('admin.services.edit-section', compact('section'));
+    }
+
+    public function updateSection(Request $request)
+    {
+        $request->validate([
+            'subtitle'        => 'nullable|string|max:255',
+            'title'           => 'nullable|string|max:500',
+            'title_highlight' => 'nullable|string|max:255',
+            'status'          => 'boolean',
+        ]);
+
+        $section = \App\Models\ServicesSectionSetting::firstOrNew([]);
+        $data    = $request->all();
+        $data['status'] = $request->has('status');
+
+        $section->fill($data)->save();
+
+        return redirect()->route('admin.services.index')->with('success', 'Services section settings updated successfully.');
     }
 }

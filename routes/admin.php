@@ -47,6 +47,8 @@ Route::middleware('admin')->group(function () {
     Route::resource('service-categories', \App\Http\Controllers\Admin\ServiceCategoryController::class)->except(['show']);
 
     // Services
+    Route::get('/services/section/edit', [\App\Http\Controllers\Admin\ServiceController::class, 'editSection'])->name('services.section.edit');
+    Route::put('/services/section', [\App\Http\Controllers\Admin\ServiceController::class, 'updateSection'])->name('services.section.update');
     Route::resource('services', \App\Http\Controllers\Admin\ServiceController::class)->except(['show']);
 
     // Portfolio Categories
@@ -64,4 +66,61 @@ Route::middleware('admin')->group(function () {
 
     // Sliders
     Route::resource('sliders', \App\Http\Controllers\Admin\SliderController::class)->except(['show']);
+
+    // Home — About Section
+    Route::get('/home-about', [\App\Http\Controllers\Admin\HomeAboutController::class, 'index'])->name('home-about.index');
+    Route::get('/home-about/section/edit', [\App\Http\Controllers\Admin\HomeAboutController::class, 'editSection'])->name('home-about.section.edit');
+    Route::put('/home-about/section', [\App\Http\Controllers\Admin\HomeAboutController::class, 'updateSection'])->name('home-about.section.update');
+    Route::get('/home-about/features/create', [\App\Http\Controllers\Admin\HomeAboutController::class, 'createFeature'])->name('home-about.features.create');
+    Route::post('/home-about/features', [\App\Http\Controllers\Admin\HomeAboutController::class, 'storeFeature'])->name('home-about.features.store');
+    Route::get('/home-about/features/{feature}/edit', [\App\Http\Controllers\Admin\HomeAboutController::class, 'editFeature'])->name('home-about.features.edit');
+    Route::put('/home-about/features/{feature}', [\App\Http\Controllers\Admin\HomeAboutController::class, 'updateFeature'])->name('home-about.features.update');
+    Route::delete('/home-about/features/{feature}', [\App\Http\Controllers\Admin\HomeAboutController::class, 'destroyFeature'])->name('home-about.features.destroy');
+
+    // Home — Testimonial Section
+    Route::get('/testimonials', [\App\Http\Controllers\Admin\TestimonialController::class, 'index'])->name('testimonials.index');
+    Route::get('/testimonials/section/edit', [\App\Http\Controllers\Admin\TestimonialController::class, 'editSection'])->name('testimonials.section.edit');
+    Route::put('/testimonials/section', [\App\Http\Controllers\Admin\TestimonialController::class, 'updateSection'])->name('testimonials.section.update');
+    Route::get('/testimonials/create', [\App\Http\Controllers\Admin\TestimonialController::class, 'create'])->name('testimonials.create');
+    Route::post('/testimonials', [\App\Http\Controllers\Admin\TestimonialController::class, 'store'])->name('testimonials.store');
+    Route::get('/testimonials/{testimonial}/edit', [\App\Http\Controllers\Admin\TestimonialController::class, 'edit'])->name('testimonials.edit');
+    Route::put('/testimonials/{testimonial}', [\App\Http\Controllers\Admin\TestimonialController::class, 'update'])->name('testimonials.update');
+    Route::delete('/testimonials/{testimonial}', [\App\Http\Controllers\Admin\TestimonialController::class, 'destroy'])->name('testimonials.destroy');
+
+    // Home — Trusted Section (Fid Section)
+    Route::get('/home-trusted', [\App\Http\Controllers\Admin\HomeTrustedController::class, 'index'])->name('home-trusted.index');
+    Route::get('/home-trusted/section/edit', [\App\Http\Controllers\Admin\HomeTrustedController::class, 'editSection'])->name('home-trusted.section.edit');
+    Route::put('/home-trusted/section', [\App\Http\Controllers\Admin\HomeTrustedController::class, 'updateSection'])->name('home-trusted.section.update');
+    Route::get('/home-trusted/features/create', [\App\Http\Controllers\Admin\HomeTrustedController::class, 'createFeature'])->name('home-trusted.features.create');
+    Route::post('/home-trusted/features', [\App\Http\Controllers\Admin\HomeTrustedController::class, 'storeFeature'])->name('home-trusted.features.store');
+    Route::get('/home-trusted/features/{feature}/edit', [\App\Http\Controllers\Admin\HomeTrustedController::class, 'editFeature'])->name('home-trusted.features.edit');
+    Route::put('/home-trusted/features/{feature}', [\App\Http\Controllers\Admin\HomeTrustedController::class, 'updateFeature'])->name('home-trusted.features.update');
+    Route::delete('/home-trusted/features/{feature}', [\App\Http\Controllers\Admin\HomeTrustedController::class, 'destroyFeature'])->name('home-trusted.features.destroy');
+    Route::get('/home-trusted/counters/create', [\App\Http\Controllers\Admin\HomeTrustedController::class, 'createCounter'])->name('home-trusted.counters.create');
+    Route::post('/home-trusted/counters', [\App\Http\Controllers\Admin\HomeTrustedController::class, 'storeCounter'])->name('home-trusted.counters.store');
+    Route::get('/home-trusted/counters/{counter}/edit', [\App\Http\Controllers\Admin\HomeTrustedController::class, 'editCounter'])->name('home-trusted.counters.edit');
+    Route::put('/home-trusted/counters/{counter}', [\App\Http\Controllers\Admin\HomeTrustedController::class, 'updateCounter'])->name('home-trusted.counters.update');
+    Route::delete('/home-trusted/counters/{counter}', [\App\Http\Controllers\Admin\HomeTrustedController::class, 'destroyCounter'])->name('home-trusted.counters.destroy');
+
+    // Home — CTA Section
+    Route::get('/home-cta', [\App\Http\Controllers\Admin\HomeCtaController::class, 'index'])->name('home-cta.index');
+    Route::get('/home-cta/edit', [\App\Http\Controllers\Admin\HomeCtaController::class, 'edit'])->name('home-cta.edit');
+    Route::put('/home-cta', [\App\Http\Controllers\Admin\HomeCtaController::class, 'update'])->name('home-cta.update');
+
+    // Home — Why Different Section
+    Route::get('/home-different', [\App\Http\Controllers\Admin\HomeDifferentController::class, 'index'])->name('home-different.index');
+    Route::get('/home-different/section/edit', [\App\Http\Controllers\Admin\HomeDifferentController::class, 'editSection'])->name('home-different.section.edit');
+    Route::put('/home-different/section', [\App\Http\Controllers\Admin\HomeDifferentController::class, 'updateSection'])->name('home-different.section.update');
+    Route::get('/home-different/tabs/create', [\App\Http\Controllers\Admin\HomeDifferentController::class, 'createTab'])->name('home-different.tabs.create');
+    Route::post('/home-different/tabs', [\App\Http\Controllers\Admin\HomeDifferentController::class, 'storeTab'])->name('home-different.tabs.store');
+    Route::get('/home-different/tabs/{tab}/edit', [\App\Http\Controllers\Admin\HomeDifferentController::class, 'editTab'])->name('home-different.tabs.edit');
+    Route::put('/home-different/tabs/{tab}', [\App\Http\Controllers\Admin\HomeDifferentController::class, 'updateTab'])->name('home-different.tabs.update');
+    Route::delete('/home-different/tabs/{tab}', [\App\Http\Controllers\Admin\HomeDifferentController::class, 'destroyTab'])->name('home-different.tabs.destroy');
+
+    // Home — Video Banner Section
+    Route::get('/home-video-banner', [\App\Http\Controllers\Admin\HomeVideoBannerController::class, 'index'])->name('home-video-banner.index');
+    Route::get('/home-video-banner/edit', [\App\Http\Controllers\Admin\HomeVideoBannerController::class, 'edit'])->name('home-video-banner.edit');
+    Route::put('/home-video-banner', [\App\Http\Controllers\Admin\HomeVideoBannerController::class, 'update'])->name('home-video-banner.update');
+    Route::delete('/home-video-banner/remove-logo', [\App\Http\Controllers\Admin\HomeVideoBannerController::class, 'removeCustomLogo'])->name('home-video-banner.remove-logo');
+    Route::delete('/home-video-banner/remove-background', [\App\Http\Controllers\Admin\HomeVideoBannerController::class, 'removeBackground'])->name('home-video-banner.remove-background');
 });

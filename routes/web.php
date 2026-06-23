@@ -47,16 +47,17 @@ function setupResponse(string $title, string $body, string $nextUrl = '', string
 // ── Dashboard (সব ধাপের অবস্থা দেখা) ──────────────────────────
 Route::get('/server-setup-run', function () {
     $steps = [
-        'migrate'                   => ['label' => 'Database Migration', 'url' => '/setup-step/migrate'],
-        'optimize_clear'            => ['label' => 'Cache Clear',        'url' => '/setup-step/optimize-clear'],
-        'storage_link'              => ['label' => 'Storage Link',       'url' => '/setup-step/storage-link'],
-        'seed_user'                 => ['label' => 'Seed: Admin User',   'url' => '/setup-step/seed-user'],
-        'seed_section_settings'     => ['label' => 'Seed: Section Settings', 'url' => '/setup-step/seed-section-settings'],
-        'seed_slider'               => ['label' => 'Seed: Slider',       'url' => '/setup-step/seed-slider'],
-        'seed_services'             => ['label' => 'Seed: Services',     'url' => '/setup-step/seed-services'],
-        'seed_portfolio'            => ['label' => 'Seed: Portfolio',    'url' => '/setup-step/seed-portfolio'],
-        'seed_blog'                 => ['label' => 'Seed: Blog',         'url' => '/setup-step/seed-blog'],
-        'seed_pages'                => ['label' => 'Seed: Pages',        'url' => '/setup-step/seed-pages'],
+        'migrate'                   => ['label' => 'Database Migration',        'url' => '/setup-step/migrate'],
+        'optimize_clear'            => ['label' => 'Cache Clear',               'url' => '/setup-step/optimize-clear'],
+        'storage_link'              => ['label' => 'Storage Link',              'url' => '/setup-step/storage-link'],
+        'seed_user'                 => ['label' => 'Seed: Admin User',          'url' => '/setup-step/seed-user'],
+        'seed_section_settings'     => ['label' => 'Seed: Section Settings',    'url' => '/setup-step/seed-section-settings'],
+        'seed_slider'               => ['label' => 'Seed: Slider',              'url' => '/setup-step/seed-slider'],
+        'seed_services'             => ['label' => 'Seed: Services',            'url' => '/setup-step/seed-services'],
+        'seed_portfolio'            => ['label' => 'Seed: Portfolio',           'url' => '/setup-step/seed-portfolio'],
+        'seed_blog'                 => ['label' => 'Seed: Blog',                'url' => '/setup-step/seed-blog'],
+        'seed_pages'                => ['label' => 'Seed: Pages',               'url' => '/setup-step/seed-pages'],
+        'seed_home_video_banner'    => ['label' => 'Seed: Home Video Banner',   'url' => '/setup-step/seed-home-video-banner'],
     ];
 
     $progress = getSetupProgress();
@@ -256,15 +257,31 @@ Route::get('/setup-step/seed-blog', function () {
 Route::get('/setup-step/seed-pages', function () {
     if (isSetupStepDone('seed_pages')) {
         return setupResponse('Seed: Pages', "<p class='skip'>⏭ ইতিমধ্যে সম্পন্ন, স্কিপ করা হয়েছে।</p>",
-            '/server-setup-run', 'Dashboard দেখুন');
+            '/setup-step/seed-home-video-banner', 'Seed Home Video Banner');
     }
     try {
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\PageSeeder', '--force' => true]);
         markSetupStepDone('seed_pages');
-        return setupResponse('Seed: Pages', "<p class='ok'>✅ Pages seeded!</p><br><p><b>🎉 সব ধাপ সম্পন্ন!</b></p>",
-            '/server-setup-run', 'Dashboard দেখুন');
+        return setupResponse('Seed: Pages', "<p class='ok'>✅ Pages seeded!</p>",
+            '/setup-step/seed-home-video-banner', 'Seed Home Video Banner');
     } catch (\Exception $e) {
         return setupResponse('Seed: Pages', "<p class='err'>❌ Error: ".e($e->getMessage())."</p><a href='/setup-step/seed-pages' class='btn'>🔄 আবার চেষ্টা করুন</a>");
+    }
+});
+
+// ── Step 11: Seed Home Video Banner ─────────────────────────────
+Route::get('/setup-step/seed-home-video-banner', function () {
+    if (isSetupStepDone('seed_home_video_banner')) {
+        return setupResponse('Seed: Home Video Banner', "<p class='skip'>⏭ ইতিমধ্যে সম্পন্ন, স্কিপ করা হয়েছে।</p>",
+            '/server-setup-run', 'Dashboard দেখুন');
+    }
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\HomeVideoBannerSeeder', '--force' => true]);
+        markSetupStepDone('seed_home_video_banner');
+        return setupResponse('Seed: Home Video Banner', "<p class='ok'>✅ Home Video Banner seeded!</p><br><p><b>🎉 সব ধাপ সম্পন্ন!</b></p>",
+            '/server-setup-run', 'Dashboard দেখুন');
+    } catch (\Exception $e) {
+        return setupResponse('Seed: Home Video Banner', "<p class='err'>❌ Error: ".e($e->getMessage())."</p><a href='/setup-step/seed-home-video-banner' class='btn'>🔄 আবার চেষ্টা করুন</a>");
     }
 });
 

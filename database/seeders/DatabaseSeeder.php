@@ -30,10 +30,17 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SectionSettingsSeeder::class,
             SliderSeeder::class,
+            HomeAboutSeeder::class,
             ShehalaServiceSeeder::class,
             ShehalaPortfolioSeeder::class,
             ShehalaBlogSeeder::class,
             PageSeeder::class,
+            TestimonialSeeder::class,
+            HomeTrustedSeeder::class,
+            ServicesSectionSeeder::class,
+            HomeCtaSeeder::class,
+            HomeDifferentSeeder::class,
+            HomeVideoBannerSeeder::class,
         ]);
     }
 }

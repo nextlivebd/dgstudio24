@@ -168,6 +168,123 @@
             border-right-color: #1f2937;
         }
 
+        /* ===== SIDEBAR GROUP / DRAWER ===== */
+        .sidebar-group { margin-bottom: 2px; }
+
+        .sidebar-group-toggle {
+            color: #9ca3af;
+            text-decoration: none;
+            padding: 11px 20px;
+            display: flex;
+            align-items: center;
+            border-left: 4px solid transparent;
+            transition: all 0.25s ease;
+            font-size: 13.5px;
+            font-weight: 600;
+            white-space: nowrap;
+            position: relative;
+            cursor: pointer;
+            background: none;
+            border-top: none;
+            border-right: none;
+            border-bottom: none;
+            width: 100%;
+            text-align: left;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+        .sidebar-group-toggle:hover,
+        .sidebar-group-toggle.group-active {
+            color: #ffffff;
+            background-color: rgba(255,255,255,0.05);
+            border-left-color: #3b82f6;
+        }
+        .sidebar-group-toggle i.group-icon {
+            width: 24px;
+            font-size: 15px;
+            text-align: center;
+            margin-right: 12px;
+            color: #6b7280;
+            transition: color 0.25s ease;
+            flex-shrink: 0;
+        }
+        .sidebar-group-toggle:hover i.group-icon,
+        .sidebar-group-toggle.group-active i.group-icon {
+            color: #3b82f6;
+        }
+        .sidebar-group-toggle .group-label {
+            flex: 1;
+            overflow: hidden;
+        }
+        .sidebar-group-toggle .group-arrow {
+            font-size: 11px;
+            margin-left: auto;
+            transition: transform 0.25s ease;
+            color: #4b5563;
+        }
+        .sidebar-group-toggle.open .group-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Drawer children */
+        .sidebar-group-items {
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(0,0,0,0.15);
+        }
+        .sidebar-group-items.open {
+            max-height: 600px;
+        }
+        .sidebar-group-items a {
+            padding: 10px 20px 10px 48px !important;
+            font-size: 13px !important;
+            font-weight: 400 !important;
+            color: #9ca3af;
+        }
+        .sidebar-group-items a:hover,
+        .sidebar-group-items a.active {
+            color: #fff;
+            border-left-color: #3b82f6;
+            background-color: rgba(255,255,255,0.06);
+        }
+        .sidebar-group-items a i {
+            font-size: 13px !important;
+            width: 20px !important;
+            margin-right: 10px !important;
+        }
+
+        /* Section label (non-group) */
+        .sidebar-section-label {
+            padding: 16px 20px 6px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #4b5563;
+            user-select: none;
+        }
+
+        /* Collapsed sidebar: hide group label & arrow */
+        .sidebar.collapsed .sidebar-group-toggle .group-label,
+        .sidebar.collapsed .sidebar-group-toggle .group-arrow {
+            display: none;
+        }
+        .sidebar.collapsed .sidebar-group-toggle {
+            justify-content: center;
+            padding: 14px 0;
+        }
+        .sidebar.collapsed .sidebar-group-toggle i.group-icon {
+            margin-right: 0;
+        }
+        .sidebar.collapsed .sidebar-group-items {
+            display: none;
+        }
+        .sidebar.collapsed .sidebar-section-label {
+            display: none;
+        }
+
+
         /* ===== SIDEBAR OVERLAY (Mobile) ===== */
         .sidebar-overlay {
             display: none;
@@ -407,75 +524,174 @@
             </button>
         </div>
         
+        @php
+            $isHomeSection = request()->routeIs('admin.sliders.*') || request()->routeIs('admin.home-about.*') || request()->routeIs('admin.testimonials.*') || request()->routeIs('admin.home-trusted.*') || request()->routeIs('admin.home-cta.*') || request()->routeIs('admin.home-different.*') || request()->routeIs('admin.home-video-banner.*');
+            $isServicesSection = request()->routeIs('admin.services.*') || request()->routeIs('admin.service-categories.*');
+            $isPortfolioSection = request()->routeIs('admin.portfolios.*') || request()->routeIs('admin.portfolio-categories.*');
+            $isBlogSection = request()->routeIs('admin.blogs.*') || request()->routeIs('admin.categories.*');
+            $isOtherSection = request()->routeIs('admin.pages.*') || request()->routeIs('admin.contacts.*') || request()->routeIs('admin.contact-informations.*');
+        @endphp
         <div class="sidebar-nav">
+
+            {{-- Dashboard --}}
             <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <i class="fas fa-tachometer-alt"></i>
                 <span class="nav-text">Dashboard</span>
                 <span class="nav-tooltip">Dashboard</span>
             </a>
-            
-            <a href="{{ route('admin.blogs.index') }}" class="{{ request()->routeIs('admin.blogs.*') ? 'active' : '' }}">
-                <i class="fas fa-blog"></i>
-                <span class="nav-text">Blogs</span>
-                <span class="nav-tooltip">Blogs</span>
-            </a>
 
-            <a href="{{ route('admin.sliders.index') }}" class="{{ request()->routeIs('admin.sliders.*') ? 'active' : '' }}">
-                <i class="fas fa-images"></i>
-                <span class="nav-text">Sliders</span>
-                <span class="nav-tooltip">Sliders</span>
-            </a>
+            {{-- ═══════════════════════════════════════ --}}
+            {{-- HOME PAGE GROUP --}}
+            {{-- ═══════════════════════════════════════ --}}
+            <div class="sidebar-group">
+                <button class="sidebar-group-toggle {{ $isHomeSection ? 'group-active open' : '' }}" onclick="toggleGroup('group-home', this)">
+                    <i class="fas fa-home group-icon"></i>
+                    <span class="group-label">Home Page</span>
+                    <i class="fas fa-chevron-down group-arrow"></i>
+                </button>
+                <div class="sidebar-group-items {{ $isHomeSection ? 'open' : '' }}" id="group-home">
+                    <a href="{{ route('admin.sliders.index') }}" class="{{ request()->routeIs('admin.sliders.*') ? 'active' : '' }}">
+                        <i class="fas fa-images"></i>
+                        <span class="nav-text">Sliders</span>
+                        <span class="nav-tooltip">Sliders</span>
+                    </a>
+                    <a href="{{ route('admin.home-about.index') }}" class="{{ request()->routeIs('admin.home-about.*') ? 'active' : '' }}">
+                        <i class="fas fa-info-circle"></i>
+                        <span class="nav-text">About Section</span>
+                        <span class="nav-tooltip">About Section</span>
+                    </a>
+                    <a href="{{ route('admin.home-trusted.index') }}" class="{{ request()->routeIs('admin.home-trusted.*') ? 'active' : '' }}">
+                        <i class="fas fa-check-double"></i>
+                        <span class="nav-text">Trusted Section</span>
+                        <span class="nav-tooltip">Trusted Section</span>
+                    </a>
+                    <a href="{{ route('admin.testimonials.index') }}" class="{{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }}">
+                        <i class="fas fa-quote-left"></i>
+                        <span class="nav-text">Testimonials</span>
+                        <span class="nav-tooltip">Testimonials</span>
+                    </a>
+                    <a href="{{ route('admin.home-cta.index') }}" class="{{ request()->routeIs('admin.home-cta.*') ? 'active' : '' }}">
+                        <i class="fas fa-bullhorn"></i>
+                        <span class="nav-text">CTA Section</span>
+                        <span class="nav-tooltip">CTA Section</span>
+                    </a>
+                    <a href="{{ route('admin.home-different.index') }}" class="{{ request()->routeIs('admin.home-different.*') ? 'active' : '' }}">
+                        <i class="fas fa-columns"></i>
+                        <span class="nav-text">Why Different</span>
+                        <span class="nav-tooltip">Why Different</span>
+                    </a>
+                    <a href="{{ route('admin.home-video-banner.index') }}" class="{{ request()->routeIs('admin.home-video-banner.*') ? 'active' : '' }}">
+                        <i class="fas fa-film"></i>
+                        <span class="nav-text">Video Banner</span>
+                        <span class="nav-tooltip">Video Banner</span>
+                    </a>
+                </div>
+            </div>
 
-            <a href="{{ route('admin.categories.index') }}" class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
-                <i class="fas fa-tags"></i>
-                <span class="nav-text">Blog Categories</span>
-                <span class="nav-tooltip">Blog Categories</span>
-            </a>
+            {{-- ═══════════════════════════════════════ --}}
+            {{-- SERVICES GROUP --}}
+            {{-- ═══════════════════════════════════════ --}}
+            <div class="sidebar-group">
+                <button class="sidebar-group-toggle {{ $isServicesSection ? 'group-active open' : '' }}" onclick="toggleGroup('group-services', this)">
+                    <i class="fas fa-concierge-bell group-icon"></i>
+                    <span class="group-label">Services</span>
+                    <i class="fas fa-chevron-down group-arrow"></i>
+                </button>
+                <div class="sidebar-group-items {{ $isServicesSection ? 'open' : '' }}" id="group-services">
+                    <a href="{{ route('admin.services.index') }}" class="{{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
+                        <i class="fas fa-list-ul"></i>
+                        <span class="nav-text">All Services</span>
+                        <span class="nav-tooltip">All Services</span>
+                    </a>
+                    <a href="{{ route('admin.service-categories.index') }}" class="{{ request()->routeIs('admin.service-categories.*') ? 'active' : '' }}">
+                        <i class="fas fa-sitemap"></i>
+                        <span class="nav-text">Service Categories</span>
+                        <span class="nav-tooltip">Service Categories</span>
+                    </a>
+                </div>
+            </div>
 
-            <a href="{{ route('admin.service-categories.index') }}" class="{{ request()->routeIs('admin.service-categories.*') ? 'active' : '' }}">
-                <i class="fas fa-sitemap"></i>
-                <span class="nav-text">Service Categories</span>
-                <span class="nav-tooltip">Service Categories</span>
-            </a>
+            {{-- ═══════════════════════════════════════ --}}
+            {{-- PORTFOLIO GROUP --}}
+            {{-- ═══════════════════════════════════════ --}}
+            <div class="sidebar-group">
+                <button class="sidebar-group-toggle {{ $isPortfolioSection ? 'group-active open' : '' }}" onclick="toggleGroup('group-portfolio', this)">
+                    <i class="fas fa-briefcase group-icon"></i>
+                    <span class="group-label">Portfolio</span>
+                    <i class="fas fa-chevron-down group-arrow"></i>
+                </button>
+                <div class="sidebar-group-items {{ $isPortfolioSection ? 'open' : '' }}" id="group-portfolio">
+                    <a href="{{ route('admin.portfolios.index') }}" class="{{ request()->routeIs('admin.portfolios.*') ? 'active' : '' }}">
+                        <i class="fas fa-th-large"></i>
+                        <span class="nav-text">All Portfolios</span>
+                        <span class="nav-tooltip">All Portfolios</span>
+                    </a>
+                    <a href="{{ route('admin.portfolio-categories.index') }}" class="{{ request()->routeIs('admin.portfolio-categories.*') ? 'active' : '' }}">
+                        <i class="fas fa-project-diagram"></i>
+                        <span class="nav-text">Portfolio Categories</span>
+                        <span class="nav-tooltip">Portfolio Categories</span>
+                    </a>
+                </div>
+            </div>
 
-            <a href="{{ route('admin.services.index') }}" class="{{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
-                <i class="fas fa-concierge-bell"></i>
-                <span class="nav-text">Services</span>
-                <span class="nav-tooltip">Services</span>
-            </a>
+            {{-- ═══════════════════════════════════════ --}}
+            {{-- BLOG GROUP --}}
+            {{-- ═══════════════════════════════════════ --}}
+            <div class="sidebar-group">
+                <button class="sidebar-group-toggle {{ $isBlogSection ? 'group-active open' : '' }}" onclick="toggleGroup('group-blog', this)">
+                    <i class="fas fa-blog group-icon"></i>
+                    <span class="group-label">Blog</span>
+                    <i class="fas fa-chevron-down group-arrow"></i>
+                </button>
+                <div class="sidebar-group-items {{ $isBlogSection ? 'open' : '' }}" id="group-blog">
+                    <a href="{{ route('admin.blogs.index') }}" class="{{ request()->routeIs('admin.blogs.*') ? 'active' : '' }}">
+                        <i class="fas fa-newspaper"></i>
+                        <span class="nav-text">All Blogs</span>
+                        <span class="nav-tooltip">All Blogs</span>
+                    </a>
+                    <a href="{{ route('admin.categories.index') }}" class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                        <i class="fas fa-tags"></i>
+                        <span class="nav-text">Blog Categories</span>
+                        <span class="nav-tooltip">Blog Categories</span>
+                    </a>
+                </div>
+            </div>
 
-            <a href="{{ route('admin.portfolios.index') }}" class="{{ request()->routeIs('admin.portfolios.*') ? 'active' : '' }}">
-                <i class="fas fa-briefcase"></i>
-                <span class="nav-text">Portfolios</span>
-                <span class="nav-tooltip">Portfolios</span>
-            </a>
+            {{-- ═══════════════════════════════════════ --}}
+            {{-- OTHER SECTION --}}
+            {{-- ═══════════════════════════════════════ --}}
+            <div class="sidebar-group">
+                <button class="sidebar-group-toggle {{ $isOtherSection ? 'group-active open' : '' }}" onclick="toggleGroup('group-other', this)">
+                    <i class="fas fa-layer-group group-icon"></i>
+                    <span class="group-label">Pages & Contact</span>
+                    <i class="fas fa-chevron-down group-arrow"></i>
+                </button>
+                <div class="sidebar-group-items {{ $isOtherSection ? 'open' : '' }}" id="group-other">
+                    <a href="{{ route('admin.pages.index') }}" class="{{ request()->routeIs('admin.pages.*') ? 'active' : '' }}">
+                        <i class="fas fa-file-alt"></i>
+                        <span class="nav-text">Pages</span>
+                        <span class="nav-tooltip">Pages</span>
+                    </a>
+                    <a href="{{ route('admin.contacts.index') }}" class="{{ request()->routeIs('admin.contacts.*') ? 'active' : '' }}">
+                        <i class="fas fa-envelope"></i>
+                        <span class="nav-text">Inquiries</span>
+                        @if(isset($unreadContactsCount) && $unreadContactsCount > 0)
+                            <span class="nav-badge badge bg-danger rounded-pill">{{ $unreadContactsCount }}</span>
+                        @endif
+                        <span class="nav-tooltip">Inquiries</span>
+                    </a>
+                    <a href="{{ route('admin.contact-informations.index') }}" class="{{ request()->routeIs('admin.contact-informations.*') ? 'active' : '' }}">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span class="nav-text">Office Info</span>
+                        <span class="nav-tooltip">Office Info</span>
+                    </a>
+                </div>
+            </div>
 
-            <a href="{{ route('admin.portfolio-categories.index') }}" class="{{ request()->routeIs('admin.portfolio-categories.*') ? 'active' : '' }}">
-                <i class="fas fa-project-diagram"></i>
-                <span class="nav-text">Portfolio Categories</span>
-                <span class="nav-tooltip">Portfolio Categories</span>
-            </a>
-
-            <a href="{{ route('admin.pages.index') }}" class="{{ request()->routeIs('admin.pages.*') ? 'active' : '' }}">
-                <i class="fas fa-file-alt"></i>
-                <span class="nav-text">Pages</span>
-                <span class="nav-tooltip">Pages</span>
-            </a>
-            
-            <a href="{{ route('admin.contacts.index') }}" class="{{ request()->routeIs('admin.contacts.*') ? 'active' : '' }}">
-                <i class="fas fa-envelope"></i>
-                <span class="nav-text">Inquiries</span>
-                @if(isset($unreadContactsCount) && $unreadContactsCount > 0)
-                    <span class="nav-badge badge bg-danger rounded-pill">{{ $unreadContactsCount }}</span>
-                @endif
-                <span class="nav-tooltip">Inquiries</span>
-            </a>
-
-            <a href="{{ route('admin.contact-informations.index') }}" class="{{ request()->routeIs('admin.contact-informations.*') ? 'active' : '' }}">
-                <i class="fas fa-map-marked-alt"></i>
-                <span class="nav-text">Office Info</span>
-                <span class="nav-tooltip">Office Info</span>
-            </a>
+            {{-- ═══════════════════════════════════════ --}}
+            {{-- ADMIN SECTION --}}
+            {{-- ═══════════════════════════════════════ --}}
+            <div class="sidebar-section-label">Admin</div>
 
             <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                 <i class="fas fa-users"></i>
@@ -488,6 +704,7 @@
                 <span class="nav-text">Site Settings</span>
                 <span class="nav-tooltip">Site Settings</span>
             </a>
+
         </div>
     </div>
 
@@ -656,7 +873,24 @@
         }
     </script>
 
+    <!-- Sidebar Group Toggle (Drawer/Accordion) -->
+    <script>
+        function toggleGroup(groupId, btn) {
+            const items = document.getElementById(groupId);
+            if (!items) return;
+            const isOpen = items.classList.contains('open');
+            if (isOpen) {
+                items.classList.remove('open');
+                btn.classList.remove('open');
+            } else {
+                items.classList.add('open');
+                btn.classList.add('open');
+            }
+        }
+    </script>
+
     <!-- Icon Picker Logic -->
+
     <script>
         const faIcons = [
             'fas fa-phone', 'fas fa-phone-alt', 'fas fa-envelope', 'fas fa-envelope-open', 

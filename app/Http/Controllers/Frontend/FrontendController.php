@@ -11,7 +11,25 @@ class FrontendController extends Controller
         $sliders = \App\Models\Slider::where('status', true)->orderBy('order')->get();
         $recentBlogs = \App\Models\Blog::with('categories')->where('status', 'published')->latest()->take(3)->get();
         $recentPortfolios = \App\Models\Portfolio::with('category')->where('status', 1)->latest()->take(6)->get();
-        return view('frontend.pages.home', compact('sliders', 'recentBlogs', 'recentPortfolios')); 
+        $homeAbout = \App\Models\HomeAboutSection::where('status', true)->first();
+        $homeAboutFeatures = \App\Models\HomeAboutFeature::where('status', true)->orderBy('order')->get();
+        $testimonialSection = \App\Models\TestimonialSection::where('status', true)->first();
+        $testimonials = \App\Models\Testimonial::where('status', true)->orderBy('order')->get();
+        $homeTrustedSection = \App\Models\HomeTrustedSection::where('status', true)->first();
+        $homeTrustedFeatures = \App\Models\HomeTrustedFeature::where('status', true)->orderBy('order')->get();
+        $homeTrustedCounters = \App\Models\HomeTrustedCounter::where('status', true)->orderBy('order')->get();
+        $servicesSectionSetting = \App\Models\ServicesSectionSetting::where('status', true)->first();
+        $homeCtaSection = \App\Models\HomeCtaSection::where('status', true)->first();
+        $homeDifferentSection = \App\Models\HomeDifferentSection::where('status', true)->first();
+        $homeDifferentTabs = \App\Models\HomeDifferentTab::where('status', true)->orderBy('order')->get();
+        $homeVideoBanner = \App\Models\HomeVideoBanner::first();
+
+        return view('frontend.pages.home', compact(
+            'sliders', 'recentBlogs', 'recentPortfolios', 'homeAbout', 'homeAboutFeatures', 
+            'testimonialSection', 'testimonials', 'homeTrustedSection', 'homeTrustedFeatures', 'homeTrustedCounters',
+            'servicesSectionSetting', 'homeCtaSection', 'homeDifferentSection', 'homeDifferentTabs',
+            'homeVideoBanner'
+        )); 
     }
     
     public function portfolio() {
