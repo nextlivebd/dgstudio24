@@ -20,7 +20,7 @@ class ContactController extends Controller
             'website' => 'nullable|string|max:255',
         ]);
 
-        Contact::create([
+        $contact = Contact::create([
             'name' => $request->name,
             'email' => $request->email,
             'message' => $request->message,
@@ -29,6 +29,12 @@ class ContactController extends Controller
             'services' => $request->services,
             'website' => $request->website,
         ]);
+
+        try {
+            \Illuminate\Support\Facades\Mail::to('hr.dgs24@gmail.com')->send(new \App\Mail\ContactSubmitted($contact));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Contact form email notification failed: ' . $e->getMessage());
+        }
 
         return redirect()->back()->with('success', 'Thank you for contacting us! We will get back to you shortly.');
     }
