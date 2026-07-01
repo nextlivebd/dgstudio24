@@ -159,8 +159,9 @@
                             <div class="container">
                                 <!-- site-branding -->
                                 <div class="site-branding">
-                                    <a class="home-link" href="{{ url('/') }}" title="{{ get_setting('site_title', 'Global Graphic Giant') }}" rel="home">
-                                        <img id="logo-img" class="img-center" src="{{ get_setting('logo') ? asset(get_setting('logo')) : asset('frontend/images/shehalaitlimited.png') }}" alt="{{ get_setting('site_title', 'Global Graphic Giant') }} Logo">
+                                    <a class="home-link" href="{{ url('/') }}" title="{{ get_setting('site_title', 'Global Graphic Giant') }}" rel="home" style="display: inline-flex; align-items: center; gap: 10px; vertical-align: middle; height: 100%;">
+                                        <img id="logo-img" class="img-center" src="{{ get_setting('logo') ? asset(get_setting('logo')) : asset('frontend/images/shehalaitlimited.png') }}" alt="{{ get_setting('site_title', 'Global Graphic Giant') }} Logo" style="vertical-align: middle; margin: 0;">
+                                        <span class="site-title-text" style="font-size: 20px; font-weight: 700; color: #263045; white-space: nowrap; line-height: normal;">{{ get_setting('site_title', 'Global Graphic Giant') }}</span>
                                     </a>
                                 </div>
                                 <!-- site-branding end -->
