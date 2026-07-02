@@ -97,85 +97,71 @@ jQuery(function() {
 
 
 /*------------------------------------------------------------------------------*/
-/*  Slider Text Layer Width Fix
-/*  Prevents text from overlapping the front image on the right side.
-/*  Revolution Slider applies inline styles via JavaScript, so we must
-/*  also use JavaScript (after RS renders) to enforce max-widths.
+/*  Slider Stack Layout Fix
+/*  Groups absolute text layers into a single flex column layout dynamically.
+/*  This prevents vertical overlaps when text wraps, while fully preserving
+/*  the default entry/exit animations.
 /*------------------------------------------------------------------------------*/
 
 jQuery(function($) {
 
-    /**
-     * Get max-width limit based on screen size, matching the gridwidth of the slider.
-     * The slider grid is 1240px wide; text should take ~55% of the left side.
-     */
-    function getTextLayerMaxWidth() {
-        var w = $(window).width();
-        if (w >= 1200) return 650;
-        if (w >= 992)  return 500;
-        if (w >= 768)  return 400;
-        return null; // Mobile: no restriction needed, RS handles visibility
-    }
+    function groupSliderTextLayers() {
+        $('rs-slide').each(function() {
+            var $slide = $(this);
+            
+            // Check if group wrapper already exists for this slide
+            if ($slide.find('.slider-text-group').length) {
+                return;
+            }
 
-    /**
-     * Apply max-width to all slider text layers after RS renders them.
-     */
-    function fixSliderTextLayers() {
-        var maxW = getTextLayerMaxWidth();
-        if (!maxW) return;
+            // Find the wrappers of all elements
+            var $subtitle = $slide.find('.slider-subtitle').closest('rs-layer-wrap, rs-parallax-wrap');
+            var $title1 = $slide.find('.slider-title-1').closest('rs-layer-wrap, rs-parallax-wrap');
+            var $title2 = $slide.find('.slider-title-2').closest('rs-layer-wrap, rs-parallax-wrap');
+            var $desc = $slide.find('.slider-desc').closest('rs-layer-wrap, rs-parallax-wrap');
+            
+            // Buttons
+            var $btn1 = $slide.find('.contactus-btn3').closest('rs-layer-wrap, rs-parallax-wrap');
+            var $btn2 = $slide.find('.details-btn').closest('rs-layer-wrap, rs-parallax-wrap');
 
-        var selectors = [
-            '.slider-subtitle',
-            '.slider-title-1',
-            '.slider-title-2',
-            '.slider-desc'
-        ];
+            // We need at least one text element to build a group
+            if ($title1.length || $title2.length) {
+                var $group = $('<div class="slider-text-group"></div>');
+                
+                // Determine insertion point
+                var $first = $subtitle.length ? $subtitle : ($title1.length ? $title1 : $title2);
+                $first.before($group);
 
-        $.each(selectors, function(i, sel) {
-            $(sel).each(function() {
-                var $el = $(this);
-                // Apply max-width and allow wrapping
-                $el.css({
-                    'max-width': maxW + 'px',
-                    'white-space': 'normal',
-                    'word-break': 'break-word',
-                    'width': 'auto'
-                });
-                // Also constrain the parent rs-parallax-wrap (RS positions this absolutely)
-                var $wrap = $el.closest('rs-parallax-wrap');
-                if ($wrap.length) {
-                    $wrap.css({
-                        'max-width': maxW + 'px'
-                    });
+                // Safely move the elements into the group to make them stack in vertical relative flow
+                if ($subtitle.length) $group.append($subtitle);
+                if ($title1.length) $group.append($title1);
+                if ($title2.length) $group.append($title2);
+                if ($desc.length) $group.append($desc);
+
+                // Group buttons horizontally inside a custom row
+                if ($btn1.length || $btn2.length) {
+                    var $btnRow = $('<div class="slider-btns-row"></div>');
+                    if ($btn2.length) $btnRow.append($btn2);
+                    if ($btn1.length) $btnRow.append($btn1);
+                    $group.append($btnRow);
                 }
-            });
+            }
         });
     }
 
-    // Run after window load (RS renders after page load)
+    // Run as early as possible on load
     $(window).on('load', function() {
-        // Short delay to let RS finish its initial render
-        setTimeout(fixSliderTextLayers, 800);
+        groupSliderTextLayers();
+        // Fallback delay to ensure elements are fully processed
+        setTimeout(groupSliderTextLayers, 600);
     });
 
-    // Re-apply on window resize
-    var resizeTimer;
-    $(window).on('resize', function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(fixSliderTextLayers, 300);
-    });
-
-    // Also hook into RS slide change events so fix persists between slides
-    $(window).on('load', function() {
-        setTimeout(function() {
-            if (typeof revapi1 !== 'undefined' && revapi1) {
-                try {
-                    revapi1.bind('revolution.slide.onloaded revolution.slide.onchange revolution.slide.onafter', function() {
-                        setTimeout(fixSliderTextLayers, 200);
-                    });
-                } catch(e) {}
-            }
-        }, 1200);
-    });
-
+    // Also run whenever slide is initialized
+    if (typeof revapi1 !== 'undefined' && revapi1) {
+        try {
+            revapi1.bind('revolution.slide.onloaded revolution.slide.onchange', function() {
+                groupSliderTextLayers();
+            });
+        } catch(e) {}
+    }
 });
