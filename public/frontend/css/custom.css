@@ -31,3 +31,62 @@ ul#menu-footer-services li a::before {
     margin: 0 auto;
     margin-top: 10px;
 }
+
+/* -------------------------------------------------------------------------
+   Homepage Slider Adjustments to Prevent Text/Image Overlaps
+   All text stays on the left, front image on the right
+   ------------------------------------------------------------------------- */
+
+/* Force text wrapping on slider text layers */
+.slider-subtitle,
+.slider-title-1,
+.slider-title-2,
+.slider-desc {
+    white-space: normal !important;
+    word-break: break-word !important;
+    text-align: left !important;
+    max-width: 55% !important;
+}
+
+/* Target the Revolution Slider wrapping containers for text layers */
+rs-parallax-wrap:has(.slider-subtitle),
+rs-parallax-wrap:has(.slider-title-1),
+rs-parallax-wrap:has(.slider-title-2),
+rs-parallax-wrap:has(.slider-desc) {
+    max-width: 55% !important;
+    overflow: visible !important;
+}
+
+/* Desktop specific widths (>= 1240px grid) */
+@media (min-width: 1200px) {
+    .slider-subtitle,
+    .slider-title-1,
+    .slider-title-2,
+    .slider-desc {
+        max-width: 650px !important;
+        width: auto !important;
+    }
+}
+
+/* Notebook/Laptops (992px to 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .slider-subtitle,
+    .slider-title-1,
+    .slider-title-2,
+    .slider-desc {
+        max-width: 500px !important;
+        width: auto !important;
+    }
+}
+
+/* Tablets (768px to 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+    .slider-subtitle,
+    .slider-title-1,
+    .slider-title-2,
+    .slider-desc {
+        max-width: 400px !important;
+        width: auto !important;
+    }
+}
+

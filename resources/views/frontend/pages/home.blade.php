@@ -17,7 +17,7 @@
                             <img src="{{ Str::startsWith($slider->background_image, 'frontend/') ? asset($slider->background_image) : asset('storage/' . $slider->background_image) }}" title="slider-bg-{{ $slider->id }}" width="1920" height="790" class="rev-slidebg" data-no-retina>
                             
                             @if($slider->subtitle)
-                            <rs-layer id="slider-2-slide-{{ $key + 1 }}-layer-0" data-type="text" data-color="#2d4a8a" data-rsp_ch="on" data-xy="xo:50px,50px,40px,-164px;yo:326px,196px,94px,61px;" data-text="w:normal;s:18,18,15,10;l:25,25,15,9;fw:600;" data-vbility="t,t,t,f" data-frame_0="x:-50,-50,-31,-19;"
+                            <rs-layer id="slider-2-slide-{{ $key + 1 }}-layer-0" class="slider-subtitle" data-type="text" data-color="#2d4a8a" data-rsp_ch="on" data-xy="xo:50px,50px,40px,-164px;yo:326px,196px,94px,61px;" data-text="w:normal;s:18,18,15,10;l:25,25,15,9;fw:600;" data-vbility="t,t,t,f" data-frame_0="x:-50,-50,-31,-19;"
                                 data-frame_1="e:Linear.easeNone;st:120;sp:400;sR:120;" data-frame_999="o:0;st:w;sR:8480;">{{ $slider->subtitle }}
                             </rs-layer>
                             @endif
@@ -34,13 +34,13 @@
                             @endif
 
                             @if($slider->title_1)
-                            <rs-layer id="slider-2-slide-{{ $key + 1 }}-layer-3" data-type="text" data-color="#263045" data-rsp_ch="on" data-xy="x:l,l,l,c;xo:50px,50px,40px,0;yo:363px,233px,124px,59px;" data-text="w:normal;s:62,52,45,37;l:70,60,50,60;fw:600;" data-frame_0="x:-50,-50,-31,-19;"
+                            <rs-layer id="slider-2-slide-{{ $key + 1 }}-layer-3" class="slider-title-1" data-type="text" data-color="#263045" data-rsp_ch="on" data-xy="x:l,l,l,c;xo:50px,50px,40px,0;yo:363px,233px,124px,59px;" data-text="w:normal;s:62,52,45,37;l:70,60,50,60;fw:600;" data-frame_0="x:-50,-50,-31,-19;"
                                 data-frame_1="e:Linear.easeNone;st:260;sp:800;sR:260;" data-frame_999="o:0;st:w;sR:7940;">{!! $slider->title_1 !!}
                             </rs-layer>
                             @endif
 
                             @if($slider->title_2)
-                            <rs-layer id="slider-2-slide-{{ $key + 1 }}-layer-4" data-type="text" data-color="#263045" data-rsp_ch="on" data-xy="x:l,l,l,c;xo:50px,50px,40px,0;yo:436px,294px,173px,104px;" data-text="w:normal;s:62,52,45,37;l:75,65,60,60;fw:600;" data-frame_0="x:-50,-50,-31,-19;"
+                            <rs-layer id="slider-2-slide-{{ $key + 1 }}-layer-4" class="slider-title-2" data-type="text" data-color="#263045" data-rsp_ch="on" data-xy="x:l,l,l,c;xo:50px,50px,40px,0;yo:436px,294px,173px,104px;" data-text="w:normal;s:62,52,45,37;l:75,65,60,60;fw:600;" data-frame_0="x:-50,-50,-31,-19;"
                                 data-frame_1="st:410;sp:800;sR:410;" data-frame_999="o:0;st:w;sR:7790;">{!! $slider->title_2 !!}
                             </rs-layer>
                             @endif
@@ -52,7 +52,7 @@
                             @endif
 
                             @if($slider->front_image)
-                            <rs-layer id="slider-2-slide-{{ $key + 1 }}-layer-6" data-type="image" data-rsp_ch="on" data-xy="x:r;xo:-70px,-70px,-123px,-267px;yo:220px,90px,66px,36px;" data-text="w:normal;s:20,20,12,7;l:0,0,15,9;" data-dim="w:578px,478px,362px,223px;h:564px,464px,353px,217px;"
+                            <rs-layer id="slider-2-slide-{{ $key + 1 }}-layer-6" class="slider-front-img" data-type="image" data-rsp_ch="on" data-xy="x:r;xo:-70px,-70px,-123px,-267px;yo:220px,90px,66px,36px;" data-text="w:normal;s:20,20,12,7;l:0,0,15,9;" data-dim="w:578px,478px,362px,223px;h:564px,464px,353px,217px;"
                                 data-vbility="t,t,t,f" data-frame_0="sX:0.9;sY:0.9;" data-frame_1="e:Linear.easeNone;st:100;sp:400;sR:100;" data-frame_999="o:0;st:w;sR:8500;"><img src="{{ Str::startsWith($slider->front_image, 'frontend/') ? asset($slider->front_image) : asset('storage/' . $slider->front_image) }}" alt="front-image-{{ $slider->id }}" width="578" height="564" data-no-retina>
                             </rs-layer>
                             @endif
@@ -72,7 +72,7 @@
                             </rs-layer>
                             
                             @if($slider->description)
-                            <rs-layer id="slider-2-slide-{{ $key + 1 }}-layer-10" data-type="text" data-color="#40444e" data-rsp_ch="on" data-xy="x:l,l,l,c;xo:50px,50px,40px,-409px;yo:519px,380px,237px,132px;" data-text="w:normal;s:16,16,12,7;l:27,27,23,14;fw:400,400,500,500;" data-vbility="t,t,t,f"
+                            <rs-layer id="slider-2-slide-{{ $key + 1 }}-layer-10" class="slider-desc" data-type="text" data-color="#40444e" data-rsp_ch="on" data-xy="x:l,l,l,c;xo:50px,50px,40px,-409px;yo:519px,380px,237px,132px;" data-text="w:normal;s:16,16,12,7;l:27,27,23,14;fw:400,400,500,500;" data-vbility="t,t,t,f"
                                 data-frame_0="y:50,50,31,19;" data-frame_1="e:Linear.easeNone;st:630;sp:500;sR:630;" data-frame_999="o:0;st:w;sR:7870;">{!! $slider->description !!}
                             </rs-layer>
                             @endif
